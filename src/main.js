@@ -24,8 +24,8 @@ const createWindow = () => {
   var splash = new BrowserWindow({ 
     icon: './assets/smt.ico',
     width: 640, 
-    height: 354, 
-    transparent: false, 
+    height: 358, 
+    transparent: true, 
     frame: false, 
     alwaysOnTop: false, 
     resizable: false
@@ -37,17 +37,22 @@ const createWindow = () => {
     splash.close();
     mainWindow.center();
     mainWindow.show();
+    mainWindow.maximize();
   }, 9000);
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
-    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`))
+    
   }
-
+  mainWindow.setMenuBarVisibility(false);
+ 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
+  
+  
 };
 
 
