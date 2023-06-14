@@ -21,18 +21,18 @@ my_font = customtkinter.CTkFont(family="Montserrat", size=42)
 
 #         # Set the width of the button to be half the height of the screen
 #         self.my_button.config(width=screen_height // 2)
-add_button_image1=ImageTk.PhotoImage(Image.open("C:/College work/Electron GUI/engine/assets1/frame0/button_1.png"))
-add_button_image2=ImageTk.PhotoImage(Image.open("C:/College work/Electron GUI/engine/assets1/frame0/button_2.png"))
-add_button_image3=ImageTk.PhotoImage(Image.open("C:/College work/Electron GUI/engine/assets1/frame0/button_3.png"))
+# add_button_image1=ImageTk.PhotoImage(Image.open("C:/College work/Electron GUI/engine/assets1/frame0/button_1.png"))
+# add_button_image2=ImageTk.PhotoImage(Image.open("C:/College work/Electron GUI/engine/assets1/frame0/button_2.png"))
+# add_button_image3=ImageTk.PhotoImage(Image.open("C:/College work/Electron GUI/engine/assets1/frame0/button_3.png"))
 
 ##create button
 frame = customtkinter.CTkFrame(master=myroot)
 frame.pack(fill="both", expand=True)
 
 # frame.bind("<Configure>",command=resize_button)
-add_image = ImageTk.PhotoImage(Image.open("engine/assets1/frame0/image_2.png").resize((90,50)))
-label = Label(frame, image= add_image)
-label.pack(pady=30, padx=10)
+# add_image = ImageTk.PhotoImage(Image.open("engine/assets1/frame0/image_2.png").resize((90,50)))
+# label = Label(frame, image= add_image)
+# label.pack(pady=30, padx=10)
 
 label = customtkinter.CTkLabel(master=frame,text="Image Stitching Tool",font=my_font)
 label.pack(pady=12, padx=10)

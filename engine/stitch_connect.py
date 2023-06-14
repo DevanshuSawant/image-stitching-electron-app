@@ -88,8 +88,30 @@ def getStitchResult(filenames):
     
     print(f'Image Bucket => {len(imageBucket)}')
     print(f'Image Resultant Bucket => {len(resultImageBucket)}')
-    for index,image in enumerate(imageBucket):
-        cv2.imwrite(f'image{index}.png',image)
+    # for index,image in enumerate(imageBucket):
+    #     cv2.imwrite(f'image{index}.png',image)
 
-    for index,image in enumerate(resultImageBucket):
-        cv2.imwrite(f'result-image{index}.png',image)
+    # for index,image in enumerate(resultImageBucket):
+    #     cv2.imwrite(f'result-image{index}.png',image)
+
+
+    save_folder = 'result-images'  # Replace with the desired folder path
+
+    # Save all images together
+    buckets = [resultImageBucket, imageBucket]
+    final_index = 0
+
+    for i in range(len(buckets)):
+        for index, image in enumerate(buckets[i]):
+            if i == 0:
+                filename = os.path.join(save_folder, f'image{index}.png')
+                cv2.imwrite(filename, image)
+                final_index = index
+            elif i == 1:
+                final_index += (index + 1)
+                filename = os.path.join(save_folder, f'image{final_index}.png')
+                cv2.imwrite(filename, image)
+
+        
+    
+        

@@ -26,6 +26,6 @@ def upload_file():
     filename = tk.filedialog.askopenfilename(multiple=True, filetypes=f_types)
     stcu.getStitchResult(filename)
 
-
+upload_file()
 
 

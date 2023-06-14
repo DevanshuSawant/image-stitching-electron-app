@@ -1,5 +1,6 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -14,6 +15,9 @@ const createWindow = () => {
     icon: './assets/smt.ico',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
     },
   });
 
@@ -28,10 +32,30 @@ const createWindow = () => {
   mainWindow.webContents.openDevTools();
 };
 
+
+
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
+
+
+ipcMain.on('saveFiles', (event, files) => {
+  console.log('saveFiles... running');
+  const destinationPath = path.join(__dirname, 'saved_files');
+  console.log(destinationPath);
+  if (!fs.existsSync(destinationPath)) {
+    fs.mkdirSync(destinationPath);
+  }
+
+  files.forEach(file => {
+    const filePath = path.join(destinationPath, file.name);
+    fs.copyFileSync(file.path, filePath);
+  });
+
+  event.sender.send('filesSaved');
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
