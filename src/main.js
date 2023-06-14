@@ -12,6 +12,7 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    show:false,
     icon: './assets/smt.ico',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -20,6 +21,21 @@ const createWindow = () => {
       enableRemoteModule: true,
     },
   });
+  var splash = new BrowserWindow({ 
+    width: 660, 
+    height: 450, 
+    transparent: false, 
+    frame: true, 
+    alwaysOnTop: true 
+  });
+  
+  splash.loadFile('splash.html');
+  splash.center();
+  setTimeout(function () {
+    splash.close();
+    mainWindow.center();
+    mainWindow.show();
+  }, 9000);
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
