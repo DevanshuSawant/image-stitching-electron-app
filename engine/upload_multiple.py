@@ -23,9 +23,10 @@ def uploadWindow():
 
 def upload_file():
     f_types = [('Jpg Files', '*.jpg'), ('PNG Files', '*.png'), ('BMP Files', '*.bmp')]  
-    filename = tk.filedialog.askopenfilename(multiple=True, filetypes=f_types)
+    filename = tk.filedialog.askopenfilenames(multiple=True, filetypes=f_types)
     stcu.getStitchResult(filename)
 
 upload_file()
+
 
 

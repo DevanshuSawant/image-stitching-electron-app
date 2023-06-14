@@ -3,7 +3,7 @@
 <head>
   <link rel="stylesheet" href="manualstitch.css">
   <meta charset="UTF-8">
-  <title>Maual Stitcher</title>
+  <title>Manual Stitcher</title>
   <script src="https://cdn.jsdelivr.net/npm/konva@8.3.1/konva.min.js"></script>
   <style>
     #container {
@@ -46,6 +46,8 @@
     <input type="range" id="opacity" min="0" max="1" step="0.01" value="1" onchange="changeOpacity(this.value)">
   </div>
   <script>
+    const { ipcRenderer } = require('electron');
+
     // Create a stage
     var stage = new Konva.Stage({
       container: 'container',
@@ -59,6 +61,7 @@
 
     // Array to store images
     var images = [];
+
 
     // Function to load an image
     function loadImage(file) {
@@ -82,15 +85,23 @@
       reader.readAsDataURL(file);
     }
 
-    // Handle image upload
-    var imageUpload = document.getElementById('image-upload');
-    imageUpload.addEventListener('change', function(event) {
-      var files = event.target.files;
-      for (var i = 0; i < files.length; i++) {
-        loadImage(files[i]);
-      }
-    });
+    // Request images from the main process
+    ipcRenderer.send('getImages');
 
+    // Receive the image paths from the main process
+    ipcRenderer.on('imagePaths', (event, imagePaths) => {
+      // Load each image using the loadImage function
+      imagePaths.forEach(imagePath => {
+        fs.readFile(imagePath, (err, data) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          const file = new Blob([data]);
+          loadImage(file);
+        });
+      });
+    });
     // Register drag events for all images
     layer.on('dragstart', function(event) {
       var image = event.target;

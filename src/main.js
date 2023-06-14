@@ -13,18 +13,19 @@ const createWindow = () => {
     width: 800,
     height: 600,
     show:false,
-    icon: './assets/smt.ico',
+    icon: './assets/square-smt-logo.png',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
+      
     },
   });
   var splash = new BrowserWindow({ 
-    icon: './assets/smt.ico',
+    icon: './assets/square-smt-logo.png',
     width: 640, 
-    height: 358, 
+    height: 352, 
     transparent: true, 
     frame: false, 
     alwaysOnTop: false, 
@@ -47,11 +48,11 @@ const createWindow = () => {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`))
     
   }
+
   mainWindow.setMenuBarVisibility(false);
  
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
-  
   
 };
 
@@ -64,21 +65,6 @@ const createWindow = () => {
 app.on('ready', createWindow);
 
 
-ipcMain.on('saveFiles', (event, files) => {
-  console.log('saveFiles... running');
-  const destinationPath = path.join(__dirname, 'saved_files');
-  console.log(destinationPath);
-  if (!fs.existsSync(destinationPath)) {
-    fs.mkdirSync(destinationPath);
-  }
-
-  files.forEach(file => {
-    const filePath = path.join(destinationPath, file.name);
-    fs.copyFileSync(file.path, filePath);
-  });
-
-  event.sender.send('filesSaved');
-});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -87,6 +73,15 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+});
+
+
+ipcMain.on('getImages', (event) => {
+  const imagePaths = fs.readdirSync(path.join('result-images'))
+    .filter(file => file.endsWith('.jpg') || file.endsWith('.png'))
+    .map(file => path.join('result-images', file));
+
+  event.reply('imagePaths', imagePaths);
 });
 
 app.on('activate', () => {

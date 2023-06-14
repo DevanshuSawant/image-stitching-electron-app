@@ -3,11 +3,28 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
+import glob
 
 import custom_stitch as cust
 
-def getStitchResult(filenames):
 
+def delete_images(folder_path):
+    image_extensions = ['*.jpg', '*.jpeg', '*.png', '*.gif']  # Add any other image extensions you want to delete
+
+    # Generate a list of all image files in the folder
+    image_files = []
+    for extension in image_extensions:
+        image_files.extend(glob.glob(os.path.join(folder_path, extension)))
+
+    # Delete each image file
+    for image_file in image_files:
+        os.remove(image_file)
+        # print(f"Deleted {image_file}")
+
+
+
+def getStitchResult(filenames):
+    error_message = 0
     # PATH = 'assets/SMT-scratch/original/'
     
     feature_extractor = 'sift'
@@ -63,9 +80,9 @@ def getStitchResult(filenames):
             M = cust.getHomography(kpsA, kpsB, featuresA, featuresB, matches, reprojThresh=4)
             if M is None:
 
-                print("Error!")
-                print('Storing in Buffer')
-
+                # print("Error!")
+                # print('Storing in Buffer')
+                error_message = 1
                 resultImageBucket.append(image1)
                 imageBucket.insert(0, image2)
                 continue
@@ -86,8 +103,8 @@ def getStitchResult(filenames):
 
             imageBucket.insert(0, result)
     
-    print(f'Image Bucket => {len(imageBucket)}')
-    print(f'Image Resultant Bucket => {len(resultImageBucket)}')
+    # print(f'Image Bucket => {len(imageBucket)}')
+    # print(f'Image Resultant Bucket => {len(resultImageBucket)}')
     # for index,image in enumerate(imageBucket):
     #     cv2.imwrite(f'image{index}.png',image)
 
@@ -96,11 +113,11 @@ def getStitchResult(filenames):
 
 
     save_folder = 'result-images'  # Replace with the desired folder path
-
+    delete_images(save_folder)
     # Save all images together
     buckets = [resultImageBucket, imageBucket]
     final_index = 0
-
+    
     for i in range(len(buckets)):
         for index, image in enumerate(buckets[i]):
             if i == 0:
@@ -111,6 +128,8 @@ def getStitchResult(filenames):
                 final_index += (index + 1)
                 filename = os.path.join(save_folder, f'image{final_index}.png')
                 cv2.imwrite(filename, image)
+                
+    print(error_message)
 
         
     

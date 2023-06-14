@@ -67,7 +67,7 @@ def getHomography(kpsA, kpsB, featuresA, featuresB, matches, reprojThresh):
         for stat in status:
             if stat[0] == 1: inlinerCount += 1
         
-        print(f'{len(status)} => inliner-count: {inlinerCount}')
+        # print(f'{len(status)} => inliner-count: {inlinerCount}')
         
         if len(status) < 32 or inlinerCount <= len(status) / 5:
             return None
