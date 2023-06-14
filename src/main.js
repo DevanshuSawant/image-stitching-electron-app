@@ -22,11 +22,13 @@ const createWindow = () => {
     },
   });
   var splash = new BrowserWindow({ 
-    width: 660, 
-    height: 450, 
+    icon: './assets/smt.ico',
+    width: 640, 
+    height: 354, 
     transparent: false, 
-    frame: true, 
-    alwaysOnTop: true 
+    frame: false, 
+    alwaysOnTop: false, 
+    resizable: false
   });
   
   splash.loadFile('splash.html');
