@@ -135,13 +135,61 @@
     stage.add(layer);
 
 
+    // Store the original stage size and position
+    var originalStageWidth = stage.width();
+    var originalStageHeight = stage.height();
+    var originalStagePosition = stage.position()
+
     function saveImage() {
-      // Save the image
-      var dataURL = stage.toDataURL({ pixelRatio: images.length});
+      // Store the current stage scale
+      var originalScale = stage.scaleX();
+
+      // Reset the stage scale to 1
+      stage.scale({ x: 1, y: 1 });
+
+      // Find the bounding box of all images
+      var imageShapes = stage.find('Image');
+      
+      var minX = Number.MAX_SAFE_INTEGER;
+      var minY = Number.MAX_SAFE_INTEGER;
+      var maxX = Number.MIN_SAFE_INTEGER;
+      var maxY = Number.MIN_SAFE_INTEGER;
+
+      imageShapes.forEach(function(shape) {
+        var box = shape.getClientRect();
+        minX = Math.min(minX, box.x);
+        minY = Math.min(minY, box.y);
+        maxX = Math.max(maxX, box.x + box.width);
+        maxY = Math.max(maxY, box.y + box.height);
+      });
+
+      var boundingBox = {
+        x: minX,
+        y: minY,
+        width: maxX - minX,
+        height: maxY - minY
+      };
+
+      // Adjust the stage size based on the bounding box
+      stage.width(boundingBox.width);
+      stage.height(boundingBox.height);
+      stage.position({
+        x: -boundingBox.x,
+        y: -boundingBox.y
+      });
+
+      // Save the cropped image
+      var dataURL = stage.toDataURL({ pixelRatio: 1 });
       var link = document.createElement('a');
       link.href = dataURL;
       link.download = 'image.png';
       link.click();
+
+      // Restore the original stage size and position
+      stage.width(originalStageWidth);
+      stage.height(originalStageHeight);
+      stage.position({ x: 0, y: 0 });
+      stage.scale({ x: originalScale, y: originalScale });
     }
 
     function handleScroll(event) {
