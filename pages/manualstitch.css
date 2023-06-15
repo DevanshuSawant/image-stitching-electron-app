@@ -46,3 +46,7 @@ body{
 	border-top: 1px solid white;
 	margin-top: 10px;
   }
+#image-upload{
+	display: none;
+	
+}

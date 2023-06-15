@@ -1,6 +1,5 @@
 let {PythonShell} = require('python-shell')
 const { ipcRenderer } = require('electron');
-
 let pyshell = new PythonShell('engine/upload_multiple.py');
 console.log('hellos');
 pythonRunner = () => {
@@ -42,7 +41,6 @@ pythonRunner = () => {
     // return {message}
 }
 pythonRunner()
-
 // if (message==0) {
 //     console.log(message)
 //     console.log('no stitching needed')
