@@ -31,20 +31,20 @@
       <a href="#" class="box">
         <button onclick="saveImage()" class="box-content">Save Image</button>
       </a>
-      
       <a href="../index.html" class="box">
         <button class="box-content">
           <p>Go Back ←</p>
         </button>
       </a>
+      <div>
+        <label for="opacity">Opacity:</label>
+        <input type="range" id="opacityRange" min="0" max="1" step="0.1" value="1" />
+      </div>
     </div>
     <hr class="line">
   </div>
   <div id="container"></div>
-  <div>
-    <label for="opacity">Opacity:</label>
-    <input type="range" id="opacity" min="0" max="1" step="0.01" value="1" onchange="changeOpacity(this.value)">
-  </div>
+  
   <script>
 // Create a stage
 var stage = new Konva.Stage({
@@ -91,10 +91,24 @@ var stage = new Konva.Stage({
       }
     });
 
+    var opacityRange = document.getElementById('opacityRange');
     // Register drag events for all images
     layer.on('dragstart', function(event) {
       var image = event.target;
       image.moveToTop();
+      
+      // Get the opacity value from the range input
+      var opacityValue = opacityRange.value;
+      image.opacity(opacityValue);
+
+      layer.draw();
+    });
+
+    // Reset opacity when drag ends
+    layer.on('dragend', function(event) {
+      var image = event.target;
+      image.opacity(1); // Reset the opacity to 100% (1)
+
       layer.draw();
     });
 
@@ -145,14 +159,6 @@ var stage = new Konva.Stage({
     stage.on('dragend', function() {
       container.addEventListener('wheel', handleScroll, { passive: false });
     });
-
-    function changeOpacity(value) {
-      // Set the opacity of the last moved image
-      if (lastMovedImage) {
-        lastMovedImage.opacity(value);
-        layer.batchDraw();
-      }
-    }
 
     function clearImages() {
       layer.removeChildren();
