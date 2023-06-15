@@ -39,7 +39,7 @@ const createWindow = () => {
     mainWindow.center();
     mainWindow.show();
     mainWindow.maximize();
-  }, 9000);
+  }, 3000);
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
@@ -49,10 +49,10 @@ const createWindow = () => {
     
   }
 
-  mainWindow.setMenuBarVisibility(false);
+  mainWindow.setMenuBarVisibility(true);
  
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
   
 };
 

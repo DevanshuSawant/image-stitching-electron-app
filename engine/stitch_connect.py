@@ -1,9 +1,7 @@
 import cv2
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
 import os
 import glob
+import sys
 
 import custom_stitch as cust
 
@@ -20,8 +18,12 @@ def delete_images(folder_path):
     for image_file in image_files:
         os.remove(image_file)
         # print(f"Deleted {image_file}")
-
-
+        
+save_folder = 'result-images'
+directory = os.path.dirname(os.path.abspath(save_folder))
+final_directory = os.path.join(directory,save_folder)
+print(final_directory)
+sys.stdout.flush()
 
 def getStitchResult(filenames):
     error_message = 0
@@ -31,12 +33,20 @@ def getStitchResult(filenames):
 
     imageBucket = []
     resultImageBucket = []
-
+    number_of_images = len(filenames)
+    current_number_of_completed_images = 0
+    print(f'tn:{number_of_images}') # total no of images sent to js file
+    sys.stdout.flush()
+    
     for file in filenames:
         imageBucket.append(cv2.imread(file))
 
     while True:
         if len(imageBucket) < 2:
+            current_number_of_completed_images += 1
+            print(f'cd:{current_number_of_completed_images}') # current number of images currently processed if no of images are less than 2
+            sys.stdout.flush()
+            
             break
         else:
             image1 = imageBucket.pop(0)
@@ -76,7 +86,7 @@ def getStitchResult(filenames):
     
             # plt.imshow(img3)
             # plt.show()
-
+            current_number_of_completed_images += 1
             M = cust.getHomography(kpsA, kpsB, featuresA, featuresB, matches, reprojThresh=4)
             if M is None:
 
@@ -85,6 +95,9 @@ def getStitchResult(filenames):
                 error_message = 1
                 resultImageBucket.append(image1)
                 imageBucket.insert(0, image2)
+                print(f'cd:{current_number_of_completed_images}') # current number of images currently processed if error occurs
+                sys.stdout.flush()
+                
                 continue
         
             (matches, H, status) = M
@@ -100,9 +113,12 @@ def getStitchResult(filenames):
             # plt.figure(figsize=(20,10))
             # plt.imshow(result)
             # plt.show()
-
+            print(f'cd:{current_number_of_completed_images}') # current number of images currently processed if no error occurs and merged successfully
+            sys.stdout.flush()
+            
             imageBucket.insert(0, result)
-    
+        
+         
     # print(f'Image Bucket => {len(imageBucket)}')
     # print(f'Image Resultant Bucket => {len(resultImageBucket)}')
     # for index,image in enumerate(imageBucket):
@@ -111,13 +127,15 @@ def getStitchResult(filenames):
     # for index,image in enumerate(resultImageBucket):
     #     cv2.imwrite(f'result-image{index}.png',image)
 
-
-    save_folder = 'result-images'  # Replace with the desired folder path
+    # Create the directory
+    os.makedirs(final_directory, exist_ok=True)
     delete_images(save_folder)
     # Save all images together
     buckets = [resultImageBucket, imageBucket]
     final_index = 0
-    
+    # path = os.path.abspath(save_folder)
+    # directory = os.path.dirname(path)
+    # print(os.path.join(directory,save_folder))
     for i in range(len(buckets)):
         for index, image in enumerate(buckets[i]):
             if i == 0:
@@ -128,9 +146,10 @@ def getStitchResult(filenames):
                 final_index += (index + 1)
                 filename = os.path.join(save_folder, f'image{final_index}.png')
                 cv2.imwrite(filename, image)
-                
-    print(error_message)
-
+    
+    
+    print(f'er:{error_message}') # error message to see if manual stitching is required
+    sys.stdout.flush()
         
     
         

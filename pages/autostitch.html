@@ -17,11 +17,10 @@
   </head>
   <body>
     <!-- <button id="run-python-button" onclick="pythonRunner()" >Run Python Script</button> -->
-    <p>
-      Pls wait file system window will open shortly...
-    </p>
+    <p id="fs-loading-message">Pls wait file system window will open shortly...</p>
+    <progress id="myProgress" value="0" max="100" style="display: none;"></progress>
     <a href="../index.html"><button id="myButton" style="display: none;">Go Back</button></a>
-
+    <p id="python-output"></p>
     <script src="autostitch.js"></script>
   </body>
 </html>

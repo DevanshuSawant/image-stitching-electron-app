@@ -1,8 +1,5 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-import os
 
 def detectAndDescribe(image, ort, widthSize, method=None):
 
