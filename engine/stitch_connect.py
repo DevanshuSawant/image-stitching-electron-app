@@ -40,6 +40,9 @@ def getStitchResult(filenames):
     
     for file in filenames:
         imageBucket.append(cv2.imread(file))
+        print(file)
+        sys.stdout.flush()
+
 
     while True:
         if len(imageBucket) < 2:

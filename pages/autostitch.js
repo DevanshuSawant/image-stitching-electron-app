@@ -1,17 +1,13 @@
 let {PythonShell} = require('python-shell')
-const { ipcRenderer } = require('electron');
 
 let options_exe = {
     mode : 'text',
     pythonPath: 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe',
-    // pythonOptions: ['-u'], // get print results in real-time
     scriptPath: 'engine/dist/upload_multiple/',
-    // args: ['value1', 'value2', 'value3']
 };
 
 let options_py = {
     mode : 'text',
-    // pythonPath: 'C:\\Users\\james\\AppData\\Local\\Programs\\Python\\Python39\\python.exe',
     pythonOptions: ['-u'], // get print results in real-time
     scriptPath: 'engine/',
 };
@@ -23,15 +19,22 @@ let options_py = {
 
 // let pyshell = new PythonShell('upload_multiple.exe', options_exe);  // for when py is converted to exe
 let pyshell = new PythonShell('upload_multiple.py', options_py);
+fileNames = [];
+var imageUpload = document.getElementById('image-upload');
+imageUpload.addEventListener('change', function(event) {
+    var files = event.target.files;
+    for (var i = 0; i < files.length; i++) {
+        fileNames.push(files[i].path);
+    }
+    pyshell.send(fileNames);
+    pythonRunner();
+});
+
 
   
 pythonRunner = () => {
-    // sends a message to the Python script via stdin
-    pyshell.send('hello');
-    // console.log('hello');
+
     pyshell.on('message', function (message) {
-        var fsLoadingMessage = document.getElementById("fs-loading-message");
-        fsLoadingMessage.style.display = "none";
         var progressBar = document.getElementById('myProgress');
         progressBar.style.display = 'block';
 
@@ -76,4 +79,3 @@ pythonRunner = () => {
     button.style.display = 'block';
     });
 }
-pythonRunner()
