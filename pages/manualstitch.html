@@ -116,17 +116,19 @@ var stage = new Konva.Stage({
     // Add the layer to the stage
     stage.add(layer);
 
-    // Store the original stage size and position
-    var originalStageWidth = stage.width();
-    var originalStageHeight = stage.height();
-    var originalStagePosition = stage.position()
+
 
     function saveImage() {
       // Store the current stage scale
       var originalScale = stage.scaleX();
+      // Store the original stage size and position
+      var originalStageWidth = stage.width();
+      var originalStageHeight = stage.height();
+      var originalStagePosition = stage.position()
 
       // Reset the stage scale to 1
       stage.scale({ x: 1, y: 1 });
+      stage.position({ x: 0, y: 0 });
 
       // Find the bounding box of all images
       var imageShapes = stage.find('Image');
@@ -165,11 +167,11 @@ var stage = new Konva.Stage({
       link.href = dataURL;
       link.download = 'image.png';
       link.click();
-
+      console.log('Saved imagye!');
       // Restore the original stage size and position
       stage.width(originalStageWidth);
       stage.height(originalStageHeight);
-      stage.position({ x: 0, y: 0 });
+      stage.position(originalStagePosition);
       stage.scale({ x: originalScale, y: originalScale });
     }
 
