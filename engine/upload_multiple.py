@@ -1,16 +1,15 @@
-from time import sleep
-import tkinter as tk
-from tkinter import *
-from tkinter.filedialog import askopenfile
-
+import sys
 import stitch_connect as stcu
 
-def upload_file():
-    f_types = [('Jpg Files', '*.jpg'), ('PNG Files', '*.png'), ('BMP Files', '*.bmp')]  
-    filename = tk.filedialog.askopenfilenames(multiple=True, filetype=f_types)
-    stcu.getStitchResult(filename)
 
-upload_file()
+file_paths = []
 
+# Read input from stdin until an empty line is encountered
+while True:
+    line = sys.stdin.readline().rstrip()
+    if line == "":
+        break
+    file_paths.append(line)
 
-print('done')
+fileArray = file_paths[0].split(',')
+stcu.getStitchResult(fileArray)
