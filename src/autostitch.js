@@ -60,7 +60,7 @@ pythonRunner = () => {
             console.log('stitched image saved');
             const strippedPath = message.replace(/^fd:/, '');
             let outputMessage = document.getElementById('file-directory');
-            outputMessage.innerHTML = "Stitched image saved at: " + strippedPath;
+            outputMessage.innerHTML = "Stitched image will be saved at: " + strippedPath;
         }
         
         if (typeofmessage == 'tn') {
