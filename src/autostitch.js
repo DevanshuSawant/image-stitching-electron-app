@@ -59,13 +59,16 @@ pythonRunner = () => {
             console.log(message);
             console.log('stitched image saved');
             let strippedPath = message.replace(/^fd:/, '');
-            let outputMessage = document.getElementById('file-directory');
-            outputMessage.innerHTML = "Stitched image will be saved at: " + strippedPath;
-            fd = path.join(strippedPath, 'image1.png');
+            // let outputMessage = document.getElementById('file-directory');
+            // outputMessage.innerHTML = "Stitched image will be saved at: " + strippedPath;
+            // fd = path.join(strippedPath, 'image1.png');
+            localStorage.setItem('finalImageFolder', strippedPath);
         }
         
         if (typeofmessage == 'tn') {
             tn=messagecode;
+            document.getElementById('python-output').innerHTML = tn + ': Images Uploaded';
+            
         }
 
         if (typeofmessage == 'cd') {
@@ -74,18 +77,20 @@ pythonRunner = () => {
             console.log(percentageDone);
             var progressBar = document.getElementById("myProgress");
             progressBar.value = percentageDone;
-            document.getElementById('python-output').innerHTML = cd + ' of ' + tn + ' images processed';
+            document.getElementById('python-output').innerHTML = cd + ' of ' + tn + ' Images Processed';
         }
 
         if (typeofmessage == 'er') {
             if (messagecode==0) {
                 console.log(messagecode)
                 console.log('no stitching needed')
-                // let outputMessage = document.getElementById('python-output');
-                // outputMessage.innerHTML = 'No stitching needed'; 
-                // console.log(currentPath);
                 console.log(fd);
-                // shell.openPath(fd);
+                var fileOpenButton = document.getElementById('file-open-button');
+                var fileCopyButton = document.getElementById('copy-path-button');
+                fileOpenButton.style.display = 'block';
+                fileCopyButton.style.display = 'block';
+                finalImagePath = localStorage.getItem('finalImagePath');
+                shell.openPath(finalImagePath);
             }
             if (messagecode==1) {
                 console.log(messagecode)
@@ -95,7 +100,8 @@ pythonRunner = () => {
         }
         if (typeofmessage == 'finished') {
             let strippedPath = message.replace(/^finished:/, '');
-            shell.openPath(strippedPath);
+            // shell.openPath(strippedPath);
+            localStorage.setItem('finalImagePath', strippedPath);
         }
     });
     
@@ -108,3 +114,13 @@ pythonRunner = () => {
     });
 }
 
+showInFolder = () => {
+    let finalImageFolder = localStorage.getItem('finalImageFolder');
+    shell.openPath(finalImageFolder);
+}
+
+copyFilePath = () => {
+    let finalImagePath = localStorage.getItem('finalImagePath');
+    console.log(finalImagePath);
+    navigator.clipboard.writeText(finalImagePath);
+}
