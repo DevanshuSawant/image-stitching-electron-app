@@ -90,3 +90,12 @@ typings/
 
 # Electron-Forge
 out/
+
+# result-images
+result-images/
+
+# pyinstaller build files
+src/engine/build/
+src/engine/dist/
+src/engine/*.spec
+src/engine/_pycaache_/

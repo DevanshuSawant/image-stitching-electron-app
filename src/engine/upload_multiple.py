@@ -1,6 +1,8 @@
 import sys
 import stitch_connect as stcu
+import time 
 
+start_time = time.time()
 
 file_paths = []
 
@@ -13,3 +15,5 @@ while True:
 
 fileArray = file_paths[0].split(',')
 stcu.getStitchResult(fileArray)
+
+print("s:%s" % (time.time() - start_time))

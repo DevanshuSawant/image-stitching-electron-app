@@ -2,7 +2,7 @@
   "name": "image-stitching",
   "productName": "image-stitching",
   "version": "1.0.0",
-  "description": "SMT Image Stitching",
+  "description": "Image Stitching App v1",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -13,12 +13,12 @@
   },
   "keywords": [],
   "author": {
-    "name": "DevanshuSawant",
+    "name": "Shah And Anchor Kutchhi Engineering College",
     "email": "76646274+DevanshuSawant@users.noreply.github.com"
   },
   "license": "MIT",
   "dependencies": {
-    "bootstrap": "^5.3.0",
+    "@electron/remote": "^2.0.10",
     "electron-squirrel-startup": "^1.0.0",
     "python-shell": "^5.0.0"
   },

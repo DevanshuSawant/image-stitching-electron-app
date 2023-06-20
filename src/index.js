@@ -29,7 +29,7 @@ const createWindow = () => {
     transparent: true, 
     frame: false, 
     alwaysOnTop: false, 
-    resizable: false
+    resizable: false,
   });
   
   splash.loadFile('./src/splash.html');
@@ -46,6 +46,7 @@ const createWindow = () => {
   mainWindow.setMenuBarVisibility(false);
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
+
 };
 
 // This method will be called when Electron has finished
@@ -76,15 +77,6 @@ ipcMain.on('get-path', (event) => {
   const imagePaths = fs.readdirSync(path.join('result-images'))
   ipcMain.send('get-path-reply', imagePaths);
 });
-
-// ipcMain.on('getManualStitcher', (event) => {
-//   mainWindow.loadURL(path.join(__dirname, 'manualstitch.html'));
-// });
-
-// ipcMain.on('getAutoStitcher', (event) => {
-//   mainWindow.loadURL(path.join(__dirname, 'autostitch.html'));
-// });
-
 
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
