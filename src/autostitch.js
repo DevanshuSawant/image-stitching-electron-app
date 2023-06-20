@@ -120,7 +120,7 @@ showInFolder = () => {
 }
 
 copyFilePath = () => {
-    let finalImagePath = localStorage.getItem('finalImagePath');
-    console.log(finalImagePath);
-    navigator.clipboard.writeText(finalImagePath);
+    let finalImageFolder = localStorage.getItem('finalImageFolder');
+    console.log(finalImageFolder);
+    navigator.clipboard.writeText(finalImageFolder);
 }
