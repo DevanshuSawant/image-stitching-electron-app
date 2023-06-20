@@ -64,10 +64,15 @@
     var layer = new Konva.Layer();
     stage.add(layer);
 
-    // Array to store images
+    
+    // Array to store the images
     var images = [];
 
-    // Function to load an image
+    // Array to store the tooltips
+    var tooltips = [];
+
+    
+    // Function to load and display the image
     function loadImage(file) {
       var reader = new FileReader();
       reader.onload = function(event) {
@@ -77,9 +82,48 @@
             image: imageObj,
             draggable: true
           });
+          konvaImage.name(file.name);
+          
+          var tooltip = new Konva.Label({
+            opacity: 0.75
+          });
+
+          var tooltipText = new Konva.Text({
+            text: konvaImage.name(),
+            fontFamily: 'Arial',
+            fontSize: 12,
+            padding: 5,
+            fill: 'white'
+          });
+
+          tooltip.add(tooltipText);
+          tooltips.push(tooltip);
+
           konvaImage.on('dragmove', function() {
             lastMovedImage = this; // Update last moved image reference
+            var position = this.position();
+            tooltip.position({
+              x: position.x,
+              y: position.y + this.height()
+            });
+            layer.batchDraw();
           });
+
+          konvaImage.on('mouseover', function() {
+            var position = this.position();
+            tooltip.position({
+              x: position.x,
+              y: position.y + this.height()
+            });
+            layer.add(tooltip);
+            layer.batchDraw();
+          });
+
+          konvaImage.on('mouseout', function() {
+            tooltip.remove();
+            layer.batchDraw();
+          });
+
           images.push(konvaImage);
           layer.add(konvaImage);
           layer.batchDraw();
@@ -88,6 +132,7 @@
       };
       reader.readAsDataURL(file);
     }
+
 
     // Handle image upload
     var imageUpload = document.getElementById('image-upload');
@@ -121,7 +166,6 @@
 
     // Add the layer to the stage
     stage.add(layer);
-
 
 
     function saveImage() {
