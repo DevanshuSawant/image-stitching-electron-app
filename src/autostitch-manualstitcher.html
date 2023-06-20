@@ -49,6 +49,7 @@
     // const { Konva } = require('konva')
     const { ipcRenderer } = require('electron');
     const fs = require('fs');
+    const path = require('path');
     // Create a stage
     var stage = new Konva.Stage({
       container: 'container',
@@ -60,29 +61,75 @@
     var layer = new Konva.Layer();
     stage.add(layer);
 
-    // Array to store images
+    // Array to store the images
     var images = [];
 
-    // Function to load an image
-    function loadImage(file) {
-        var reader = new FileReader();
-        reader.onload = function(event) {
+    // Array to store the tooltips
+    var tooltips = [];
+    
+    // Function to load and display the image
+    function loadImage(file, imageName) {
+      if (file.name != null) {
+        imageName = file.name;
+      }
+      console.log(imageName);
+      var reader = new FileReader();
+      reader.onload = function(event) {
         var imageObj = new Image();
         imageObj.onload = function() {
-            var konvaImage = new Konva.Image({
+          var konvaImage = new Konva.Image({
             image: imageObj,
             draggable: true
-            });
-            konvaImage.on('dragmove', function() {
+          });
+          konvaImage.name(imageName);
+          
+          var tooltip = new Konva.Label({
+            opacity: 0.75
+          });
+
+          var tooltipText = new Konva.Text({
+            text: konvaImage.name(),
+            fontFamily: 'Arial',
+            fontSize: 12,
+            padding: 5,
+            fill: 'white'
+          });
+
+          tooltip.add(tooltipText);
+          tooltips.push(tooltip);
+
+          konvaImage.on('dragmove', function() {
             lastMovedImage = this; // Update last moved image reference
+            var position = this.position();
+            tooltip.position({
+              x: position.x,
+              y: position.y + this.height()
             });
-            images.push(konvaImage);
-            layer.add(konvaImage);
             layer.batchDraw();
+          });
+
+          konvaImage.on('mouseover', function() {
+            var position = this.position();
+            tooltip.position({
+              x: position.x,
+              y: position.y + this.height()
+            });
+            layer.add(tooltip);
+            layer.batchDraw();
+          });
+
+          konvaImage.on('mouseout', function() {
+            tooltip.remove();
+            layer.batchDraw();
+          });
+
+          images.push(konvaImage);
+          layer.add(konvaImage);
+          layer.batchDraw();
         };
         imageObj.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
+      };
+      reader.readAsDataURL(file);
     }
 
     // Request images from the main process
@@ -90,17 +137,18 @@
 
     // Receive the image paths from the main process
     ipcRenderer.on('imagePaths', (event, imagePaths) => {
-        // Load each image using the loadImage function
-        imagePaths.forEach(imagePath => {
+      // Load each image using the loadImage function
+      imagePaths.forEach(imagePath => {
         fs.readFile(imagePath, (err, data) => {
-            if (err) {
+          if (err) {
             console.error(err);
             return;
-            }
-            const file = new Blob([data]);
-            loadImage(file);
+          }
+          const file = new Blob([data]);
+          const imageName = path.basename(imagePath);
+          loadImage(file, imageName);
         });
-        });
+      });
     });
 
     // Handle image upload
