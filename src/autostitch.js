@@ -1,11 +1,7 @@
 let {PythonShell} = require('python-shell')
-const {ipcRenderer} = require('electron')
-
-
-// ipcRenderer.send('get-path', 'ping')
-
-path = require('path');
+const {shell} = require('electron') // deconstructing assignment
 const fs = require('fs');
+const path = require('path');
 // const path = require('path');
 // currentPath = path.join(__dirname, 'result-images');
 
@@ -27,9 +23,9 @@ let options_py = {
 // cd = current number of images currently processed
 // er = error message to see if manual stitching is required
 // fd = file directory of the stitched image
-// let pyshell = new PythonShell("./resources/app/engine/upload_multiple.py", options_py);  // for when py is converted to exe
+let pyshell = new PythonShell("./src/engine/upload_multiple.py", options_py);  // for when py is converted to exe
 
-let pyshell = new PythonShell("./resources/app/src/upload_multiple.exe", options_exe);  // for when py is converted to exe
+// let pyshell = new PythonShell("./resources/app/src/upload_multiple.exe", options_exe);  // for when py is converted to exe
 // let pyshell = new PythonShell('upload_multiple.py', options_py);
 fileNames = [];
 var imageUpload = document.getElementById('image-upload');
@@ -40,7 +36,9 @@ imageUpload.addEventListener('change', function(event) {
     }
     pyshell.send(fileNames);
     console.log(fileNames);
+    
     pythonRunner();
+
 });
 
 
@@ -55,12 +53,15 @@ pythonRunner = () => {
         console.log(message);
         const [typeofmessage, messagecode] = message.split(":");
 
+        let fd=""
+
         if (typeofmessage == 'fd') {
             console.log(message);
             console.log('stitched image saved');
-            const strippedPath = message.replace(/^fd:/, '');
+            let strippedPath = message.replace(/^fd:/, '');
             let outputMessage = document.getElementById('file-directory');
             outputMessage.innerHTML = "Stitched image will be saved at: " + strippedPath;
+            fd = path.join(strippedPath, 'image1.png');
         }
         
         if (typeofmessage == 'tn') {
@@ -83,12 +84,18 @@ pythonRunner = () => {
                 // let outputMessage = document.getElementById('python-output');
                 // outputMessage.innerHTML = 'No stitching needed'; 
                 // console.log(currentPath);
+                console.log(fd);
+                // shell.openPath(fd);
             }
             if (messagecode==1) {
                 console.log(messagecode)
                 console.log('needs stitching')
                 window.location.href = 'autostitch-manualstitcher.html';                 // Redirect to autostitcher-maualstitcher HTML file
             }
+        }
+        if (typeofmessage == 'finished') {
+            let strippedPath = message.replace(/^finished:/, '');
+            shell.openPath(strippedPath);
         }
     });
     
@@ -98,8 +105,6 @@ pythonRunner = () => {
     console.log('The exit code was: ' + code);
     console.log('The exit signal was: ' + signal);
     console.log('finished');
-    // Make the button visible
-    // var button = document.getElementById('myButton');
-    // button.style.display = 'block';
     });
 }
+

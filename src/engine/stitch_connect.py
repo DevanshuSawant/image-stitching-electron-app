@@ -20,12 +20,18 @@ def delete_images(folder_path):
         # print(f"Deleted {image_file}")
         
 save_folder = 'result-images'
-directory = os.path.dirname(os.path.abspath(save_folder))
-final_directory = os.path.join(directory,save_folder)
-print(final_directory)
-sys.stdout.flush()
+# directory = os.path.dirname(os.path.abspath(save_folder))
+# final_directory = os.path.join(directory,save_folder)
+# print(final_directory)
+# sys.stdout.flush()
 
 def getStitchResult(filenames):
+    save_folder = 'result-images'
+    directory = os.path.dirname(os.path.abspath(save_folder))
+    final_directory = os.path.join(directory,save_folder)
+    # final_directory_modified = final_directory.replace("\\", "")
+    print(f'fd:{final_directory}') # final directory where the result image will be stored
+    sys.stdout.flush()
     error_message = 0
     # PATH = 'assets/SMT-scratch/original/'
     
@@ -149,10 +155,14 @@ def getStitchResult(filenames):
                 final_index += (index + 1)
                 filename = os.path.join(save_folder, f'image{final_index}.png')
                 cv2.imwrite(filename, image)
-    
+                
+                save_folder = "image1.png"
+                save_folder1 = 'result-images\image1.png'
+
+                directory = os.path.dirname(os.path.abspath(save_folder1))
+                final_directory1 = os.path.join(directory,save_folder)
+                print(f'finished:{final_directory1}') # final directory where the result image will be stored
+                sys.stdout.flush()
     
     print(f'er:{error_message}') # error message to see if manual stitching is required
     sys.stdout.flush()
-        
-    
-        
