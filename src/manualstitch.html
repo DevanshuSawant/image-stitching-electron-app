@@ -52,7 +52,7 @@
     </button>
   </div>
 
-  <div id="container"></div>
+  <div id="container" class="rounded"></div>
   <div class="footer">
     <p style="margin-top: 8px; margin-bottom: 8px; margin-left: 8px;">Made with ❤️ by <a class="footlink" target="_blank" href="https://www.sakec.ac.in/"><b>Shah & Anchor Kutchhi Engineering College</b></a></p>
   </div>   
@@ -271,7 +271,7 @@
     function handleScroll(event) {
       var scaleBy = 1.05;
       event.preventDefault();
-
+      console.log(event.deltaY);
       var oldScale = stage.scaleX();
       var mousePointTo = {
         x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
@@ -291,7 +291,8 @@
 
       var alertInfo = document.getElementById('info-output');      
       alertInfo.classList.remove('d-none');
-      alertInfo.innerHTML = ' Dragged'; 
+      event.deltaY < 0 ? alertInfo.innerHTML = '<i class="bi bi-info-circle-fill"></i> Zoomed In': alertInfo.innerHTML = '<i class="bi bi-info-circle-fill"></i> Zoomed out';
+       
       setTimeout(function() {
         alertInfo.classList.add('d-none');
         alertInfo.innerHTML = '';
