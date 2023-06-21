@@ -2,6 +2,7 @@ let {PythonShell} = require('python-shell')
 const {shell} = require('electron') // deconstructing assignment
 const fs = require('fs');
 const path = require('path');
+const { clipboard, nativeImage } = require('electron');
 // const path = require('path');
 // currentPath = path.join(__dirname, 'result-images');
 
@@ -126,15 +127,15 @@ showInFolder = () => {
     shell.openPath(finalImageFolder);
 }
 
-copyFilePath = () => {
-    let finalImageFolder = localStorage.getItem('finalImageFolder');
-    console.log(finalImageFolder);
-    navigator.clipboard.writeText(finalImageFolder);
-    var fileCopyButton = document.getElementById('copy-path-button');
-    fileCopyButton.innerHTML = '<i class="bi bi-clipboard-check"></i> Copy Path to Clipboard';
-    setTimeout(function(){
-        fileCopyButton.innerHTML = '<i class="bi bi-clipboard"></i> Copy Path to Clipboard';
-    },1000);
+copyImageToClipBoard = () => {
+  finalImagePath = localStorage.getItem('finalImagePath');
+  const image = nativeImage.createFromPath(finalImagePath);
+  clipboard.writeImage(image);
+  var fileCopyButton = document.getElementById('copy-path-button');
+  fileCopyButton.innerHTML = '<i class="bi bi-clipboard-check"></i> Copy Image to Clipboard';
+  setTimeout(function(){
+      fileCopyButton.innerHTML = '<i class="bi bi-clipboard"></i> Copy Image to Clipboard';
+  },1000);
 }
 
 cancelProcess = () => {
