@@ -4,12 +4,15 @@
   <link rel="stylesheet" href="./manualstitch.css">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
-    <title>Manual Stitcher</title>
+    <title>Manual - Image Stitching</title>
     <script src="https://cdn.jsdelivr.net/npm/konva@8.3.1/konva.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link rel="stylesheet" href="../sass/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/js/shepherd.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/css/shepherd.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  
   <style>
     #container {
       width: 100%;
@@ -21,44 +24,43 @@
     .file-input input[type="file"] {
       display: none;
     }
+
+    #opacityRange {
+      width: 15%;
+    }
     
   </style>
 </head>
 <body>
-  <div class="buttons">
-    <div class="boxy">
-      <a href="#" class="box">
-        <button onclick="clearImages()" class="box-content">Clear Images</button>
-      </a>
-      <a href="#" class="box">
-        <label for="image-upload" class="box-content">Upload Files</label>
-        <input type="file" id="image-upload" accept="image/*" multiple class="box-content">
-      </a>
-      <a href="#" class="box">
-        <button onclick="saveImage()" class="box-content">Save Image</button>
-      </a>
-      <a href="./index.html" class="box">
-        <button class="box-content">
-          <p>Go Back ←</p>
-        </button>
-      </a>
-      <div>
-        <label for="opacity">Opacity:</label>
-        <input type="range" id="opacityRange" min="0" max="1" step="0.1" value="1" class="form-range">
-      </div>
-      <a href="#" class="box">
-        <button onclick="startTour()" class="box-content">Start Tour</button>
-      </a>
-    </div>
+
+  <div class="d-flex align-items-center">
+    <a href="./index.html" class="btn btn-secondary btn-lg m-2" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to go back to the home screen">
+      <i class="bi bi-arrow-left-circle"></i> Back
+    </a>
+    <button onclick="clearImages()" id="clear-images-button" class="btn btn-primary btn-lg m-2"><i class="bi bi-x-circle"></i> Clear Images</button>
+    <label for="image-upload" class="btn btn-primary btn-lg m-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click here to upload images for auto-stitching">
+      <i class="bi bi-plus-circle"></i> </i> Add Images
+      <input type="file" id="image-upload" accept="image/*" multiple style="display: none;">
+    </label>
+    <button onclick="saveImage()" class="btn btn-primary btn-lg m-2"><i class="bi bi-download"></i> Save Image</button>
+    <label for="opacity" class="form-label m-2" style="color: #ccc;">Opacity:</label>
+    <input type="range" id="opacityRange" min="0" max="1" step="0.1" value="1" class="form-range">
+    <button type="button" class="btn btn-outline-info btn-lg m-2 ms-auto" onclick="startTour()" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to get a tour of the page">
+      <i class="bi bi-book"></i> Tour
+    </button>
   </div>
+  <div id="info-output" class="alert alert-info d-none m-2" role="alert"></div>
+
+
+
   <div id="container"></div>
   <div class="footer">
-    <p>Made with ❤️ by <a class="footlink" target="_blank" href="https://www.sakec.ac.in/"><b>Shah & Anchor Kutchhi Engineering College</b></a></p>
-  </div>
+    <p style="margin-top: 8px; margin-bottom: 8px; margin-left: 8px;">Made with ❤️ by <a class="footlink" target="_blank" href="https://www.sakec.ac.in/"><b>Shah & Anchor Kutchhi Engineering College</b></a></p>
+  </div>   
   <script>
     // const { Konva } = require('konva')
     // const { ipcRenderer } = require('electron');
-
+    noOfImagesAddedToManualStitcher = 0;
     // Create a stage
     var stage = new Konva.Stage({
           container: 'container',
@@ -147,6 +149,8 @@
       for (var i = 0; i < files.length; i++) {
         loadImage(files[i]);
       }
+      noOfImagesAddedToManualStitcher += files.length;
+      localStorage.setItem('noOfImagesAddedToManualStitcher',noOfImagesAddedToManualStitcher );
     });
 
     var opacityRange = document.getElementById('opacityRange');
@@ -267,9 +271,21 @@
     });
 
     function clearImages() {
+      var clearImagesButton = document.getElementById('clear-images-button');
+      var alertInfo = document.getElementById('info-output');      
       layer.removeChildren();
       images = [];
       stage.batchDraw();
+      localStorage.getItem('noOfImagesAddedToManualStitcher',noOfImagesAddedToManualStitcher );
+      clearImagesButton.innerHTML = '<i class="bi bi-trash"></i> Clear Images';
+      alertInfo.classList.remove('d-none');
+      alertInfo.innerHTML = '<i class="bi bi-check-lg"></i> Images Removed From Canvas'; 
+      setTimeout(function() {
+        alertInfo.classList.add('d-none');
+        alertInfo.innerHTML = '';
+        clearImagesButton.innerHTML = '<i class="bi bi-x-circle"></i> Clear Images'; 
+      }, 700);
+      
     }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
