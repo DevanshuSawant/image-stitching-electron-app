@@ -193,10 +193,10 @@ function startTour() {
   },
   {
     id: 'step2',
-    title: 'Go Back',
-    text: 'Click this  button to Go back to Homepage.',
+    title: 'Copy Image',
+    text: 'After the image is stitched, this button will be shown,Click this to Copy the saved image to your clipboard.',
     attachTo: {
-      element: '#backtour',
+      element: '#copy-path-button',
       on: 'right',
     },
     classes: 'step-class',
@@ -233,10 +233,10 @@ function startTour() {
   },
   {
     id: 'step4',
-    title: 'Copy Image',
-    text: 'After the image is stitched, this button will be shown,Click this to Copy the saved image to your clipboard.',
+    title: 'Go Back',
+    text: 'Click this  button to Go back to Homepage.',
     attachTo: {
-      element: '#copy-path-button',
+      element: '#backtour',
       on: 'right',
     },
     classes: 'step-class',
@@ -247,7 +247,7 @@ function startTour() {
       },
       {
         text: 'Exit Tour',
-        action: tour.cancel
+        action: tourCancelAction
       },
     ],
   },
@@ -263,7 +263,7 @@ function startTour() {
     buttons: [
       {
         text: 'Exit Tour',
-        action: tour.cancel
+        action: tourCancelAction
       },
     ],
   }
@@ -281,7 +281,7 @@ function startTour() {
       },
       {
         text: 'Exit Tour',
-        action: tour.cancel
+        action: tourCancelAction
       },
     ],
   };

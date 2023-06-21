@@ -51,15 +51,15 @@
             <h1 class="card-title">Automatic Image Stitcher</h1>
             <div class="row row-cols-2">
               <div class="col-6 d-grid">
-                <a href="./index.html"id="backtour" class="btn btn-secondary btn-lg m-2" onclick="cancelProcess()" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to go back to home screen"><i class="bi bi-arrow-left-circle"></i> Back</a>
+                <a href="./index.html"id="backtour" class="btn btn-secondary btn-lg m-2" onclick="cancelProcess()" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Go back to home screen"><i class="bi bi-arrow-left-circle"></i> Back</a>
               </div>
               <div class="col-6 d-grid">
-                <button type="button" id="tourtour" class="btn btn-outline-info btn-lg m-2" onclick="startTour()" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to get a tour of the page"><i class="bi bi-book"></i> Tour</button>
+                <button type="button" id="tourtour" class="btn btn-outline-info btn-lg m-2" onclick="startTour()" data-bs-toggle="tooltip" data-bs-placement="top" title="Get a tour of the page"><i class="bi bi-book"></i> Tour</button>
               </div>
             </div>
             <div class="row">
               <div class="col d-grid">
-                <label for="image-upload" id="uploadtour" class="btn btn-primary btn-lg m-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click here to upload images for auto-stitching">
+                <label for="image-upload" id="uploadtour" class="btn btn-primary btn-lg m-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Upload images for auto-stitching">
                   <i class="bi bi-upload"></i> Upload Images </i>
                   <input type="file" id="image-upload" accept="image/*" multiple style="display: none;">
                 </label>
@@ -71,10 +71,10 @@
             <div id="python-output" class="alert alert-info d-none m-2" role="alert"></div>
             <div class="row">
               <div class="col">
-                <button type="button" id="file-open-button" class="btn btn-primary m-2" onclick="showInFolder()" style="display: none;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click here to open the folder where stitched image is saved"><i class="bi bi-folder"></i> Show Image In File Explorer</button>
+                <button type="button" id="file-open-button" class="btn btn-primary m-2" onclick="showInFolder()" style="display: none;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Open the folder where stitched image is saved"><i class="bi bi-folder"></i> Show Image In File Explorer</button>
               </div>
               <div class="col">
-                <button type="button" id="copy-path-button" class="btn btn-primary m-2" onclick="copyImageToClipBoard()" style="display: none;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click here to copy image to clipboard"><i class="bi bi-clipboard"></i> Copy Image to Clipboard</button>    
+                <button type="button" id="copy-path-button" class="btn btn-primary m-2" onclick="copyImageToClipBoard()" style="display: none;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Copy image to clipboard"><i class="bi bi-clipboard"></i> Copy Image to Clipboard</button>    
               </div>
             </div>
           </div>
