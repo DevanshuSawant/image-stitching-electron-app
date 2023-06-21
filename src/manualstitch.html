@@ -4,7 +4,7 @@
   <link rel="stylesheet" href="./manualstitch.css">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
-    <title>Manual - Image Stitching</title>
+    <title>Manual Image Stitcher</title>
     <script src="https://cdn.jsdelivr.net/npm/konva@8.3.1/konva.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link rel="stylesheet" href="../sass/styles.css">
@@ -34,24 +34,23 @@
 <body>
 
   <div class="d-flex align-items-center">
-    <a href="./index.html" class="btn btn-secondary btn-lg m-2" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to go back to the home screen">
+    <a href="./index.html" class="btn btn-secondary btn-lg m-2" role="button" data-bs-toggle="tooltip" data-bs-placement="top" id="backtour" title="Click here to go back to the home screen">
       <i class="bi bi-arrow-left-circle"></i> Back
     </a>
-    <button onclick="clearImages()" id="clear-images-button" class="btn btn-primary btn-lg m-2"><i class="bi bi-x-circle"></i> Clear Images</button>
-    <label for="image-upload" class="btn btn-primary btn-lg m-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click here to upload images for auto-stitching">
+    <label for="image-upload" class="btn btn-primary btn-lg m-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click here to upload images for auto-stitching" id="addtour">
       <i class="bi bi-plus-circle"></i> </i> Add Images
       <input type="file" id="image-upload" accept="image/*" multiple style="display: none;">
     </label>
-    <button onclick="saveImage()" class="btn btn-primary btn-lg m-2"><i class="bi bi-download"></i> Save Image</button>
+    <button onclick="saveImage()" class="btn btn-primary btn-lg m-2" id="savetour"><i class="bi bi-download"></i> Save Image</button>
+    
+    <button onclick="clearImages()" id="clear-images-button" class="btn btn-primary btn-lg m-2"><i class="bi bi-x-circle"></i> Clear Images</button>
     <label for="opacity" class="form-label m-2" style="color: #ccc;">Opacity:</label>
     <input type="range" id="opacityRange" min="0.3" max="1" step="0.1" value="1" class="form-range">
     <div id="info-output" class="alert alert-info d-none m-0 ms-auto "  role="alert"></div>
-    <button type="button" class="btn btn-outline-info btn-lg m-2 ms-auto" onclick="startTour()" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to get a tour of the page">
+    <button type="button" id='tourtour' class="btn btn-outline-info btn-lg m-2 ms-auto" onclick="startTour()" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to get a tour of the page">
       <i class="bi bi-book"></i> Tour
     </button>
   </div>
-
-
 
   <div id="container"></div>
   <div class="footer">
@@ -349,10 +348,10 @@
 
     steps=[{
       id: 'step1',
-      title: 'Step 1',
-      text: 'This is the first box. It contains a button to clear images.',
+      title: 'Go Back',
+      text: 'Click this  button to Go back to Homepage.',
       attachTo: {
-        element: '.boxy .box:nth-child(1)',
+        element: '#backtour',
         on: 'bottom',
       },
       classes: 'step-class',
@@ -369,10 +368,10 @@
     },
     {
       id: 'step2',
-      title: 'Step 2',
-      text: 'This is the second box. It contains a button for uploading files.',
+      title: 'Add Images',
+      text: 'Click this button to upload your images to the Manual stitcher.',
       attachTo: {
-        element: '.boxy .box:nth-child(2)',
+        element: '#addtour',
         on: 'bottom',
       },
       classes: 'step-class',
@@ -389,10 +388,10 @@
     },
     {
       id: 'step3',
-      title: 'Step 3',
-      text: 'This is the third box. It contains a button to save the image.',
+      title: 'Save Image',
+      text: 'Click this button to save the manually stitched images as a single image.',
       attachTo: {
-        element: '.boxy .box:nth-child(3)',
+        element: '#savetour',
         on: 'bottom',
       },
       classes: 'step-class',
@@ -409,10 +408,10 @@
     },
     {
       id: 'step4',
-      title: 'Step 4',
-      text: 'This is the fourth box. It contains a button to go back to the index page.',
+      title: 'Clear Images',
+      text: 'Click this button to clear all the images present in the canvas.',
       attachTo: {
-        element: '.boxy .box:nth-child(4)',
+        element: '#clear-images-button',
         on: 'bottom',
       },
       classes: 'step-class',
@@ -430,7 +429,7 @@
     {
       id: 'step5',
       title: 'Step 5',
-      text: 'This is the opacity range slider.',
+      text: 'This is the opacity range slider,drag the range to change the opacity of the image when clicked.',
       attachTo: {
         element: '#opacityRange',
         on: 'top',
@@ -449,8 +448,8 @@
     },
     {
       id: 'step6',
-      title: 'Step 6',
-      text: 'This is the canvas area',
+      title: 'The Canvas',
+      text: 'This is the canvas area, you can use your scrollwheel to zoom in and out in the canvas - scroll up to zoom in, scroll down to zoom out.',
       attachTo: {
         element: '#container',
         on: 'top',
@@ -466,7 +465,23 @@
         action: tour.cancel
       },
       ],
-    }
+    },
+    {
+      id: 'step7',
+      title: 'Step 6',
+      text: 'This is the canvas area, you can use your scrollwheel to zoom in and out in the canvas - scroll up to zoom in, scroll down to zoom out.',
+      attachTo: {
+        element: '#tourtour',
+        on: 'bottom',
+      },
+      classes: 'step-class',
+      buttons: [
+        {
+        text: 'Exit Tour',
+        action: tour.cancel
+      },
+      ],
+    },
   ];
 
     tour.addSteps(steps);

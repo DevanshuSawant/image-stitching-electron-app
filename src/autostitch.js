@@ -173,30 +173,10 @@ function startTour() {
 
   steps=[{
     id: 'step1',
-    title: 'Step 1',
-    text: 'This is the first box. It contains a button to clear images.',
+   title: 'Upload Files',
+    text: 'Click this button to upload your images to the automatic stitcher.',
     attachTo: {
-      element: '.boxy .box:nth-child(1)',
-      on: 'bottom',
-    },
-    classes: 'step-class',
-    buttons: [
-      {
-        text: 'Next',
-        action: tour.next,
-      },
-      {
-        text: 'Exit Tour',
-        action: tourCancelAction
-      },
-    ],
-  },
-  {
-    id: 'step4',
-    title: 'Step 4',
-    text: 'This is the fourth box. It contains a button to go back to the index page.',
-    attachTo: {
-      element: '.boxy .box:nth-child(4)',
+      element: '#uploadtour',
       on: 'right',
     },
     classes: 'step-class',
@@ -212,12 +192,32 @@ function startTour() {
     ],
   },
   {
-    id: 'step6',
-    title: 'Step 6',
-    text: 'Use me to upload files',
+    id: 'step2',
+    title: 'Go Back',
+    text: 'Click this  button to Go back to Homepage.',
     attachTo: {
-      element: '#uploadtour',
-      on: 'top',
+      element: '#backtour',
+      on: 'right',
+    },
+    classes: 'step-class',
+    buttons: [
+      {
+        text: 'Next',
+        action: tour.next,
+      },
+      {
+        text: 'Exit Tour',
+        action: tourCancelAction
+      },
+    ],
+  },
+  {
+    id: 'step3',
+    title: 'Open Folder',
+    text: 'After the image is stitched, this button will be shown,Click this to open the folder where the imaegs are saved.',
+    attachTo: {
+      element: '#file-open-button',
+      on: 'right',
     },
     classes: 'step-class',
     buttons: [
@@ -228,6 +228,42 @@ function startTour() {
       {
         text: 'Exit Tour',
         action: tourCancelAction,
+      },
+    ],
+  },
+  {
+    id: 'step4',
+    title: 'Copy Image',
+    text: 'After the image is stitched, this button will be shown,Click this to Copy the saved image to your clipboard.',
+    attachTo: {
+      element: '#copy-path-button',
+      on: 'right',
+    },
+    classes: 'step-class',
+    buttons: [
+      {
+        text: 'Next',
+        action: tour.next,
+      },
+      {
+        text: 'Exit Tour',
+        action: tour.cancel
+      },
+    ],
+  },
+  {
+    id: 'step5',
+    title: 'Tour Button',
+    text: 'In case you forget the button function, you can click this button again anytime and it will guide you through all the buttons.',
+    attachTo: {
+      element: '#tourtour',
+      on: 'top',
+    },
+    classes: 'step-class',
+    buttons: [
+      {
+        text: 'Exit Tour',
+        action: tour.cancel
       },
     ],
   }
