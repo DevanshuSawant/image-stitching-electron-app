@@ -47,62 +47,69 @@ pythonRunner = () => {
     // console.log(pyPaths);
 
     pyshell.on('message', function (message) {
-        var progressBar = document.getElementById('myProgress');
-        progressBar.style.display = 'block';
+      var progressBarParent = document.getElementById("progress-bar-parent");
+      progressBarParent.classList.remove("d-none");
+      console.log(message);
+      const [typeofmessage, messagecode] = message.split(":");
 
-        console.log(message);
-        const [typeofmessage, messagecode] = message.split(":");
 
-        let fd=""
+      if (typeofmessage == 'fd') {
+          console.log(message);
+          console.log('stitched image saved');
+          let strippedPath = message.replace(/^fd:/, '');
+          // let outputMessage = document.getElementById('file-directory');
+          // outputMessage.innerHTML = "Stitched image will be saved at: " + strippedPath;
+          // fd = path.join(strippedPath, 'image1.png');
+          localStorage.setItem('finalImageFolder', strippedPath);
+      }
+      
+      if (typeofmessage == 'tn') {
+          tn=messagecode;
+          outputMessage = document.getElementById('python-output');
+          outputMessage.classList.remove("d-none");
+          outputMessage.innerHTML = '<i class="bi bi-info-circle-fill"></i> ' + tn + ' : Images Selected for Stitching';
+          
+      }
 
-        if (typeofmessage == 'fd') {
-            console.log(message);
-            console.log('stitched image saved');
-            let strippedPath = message.replace(/^fd:/, '');
-            // let outputMessage = document.getElementById('file-directory');
-            // outputMessage.innerHTML = "Stitched image will be saved at: " + strippedPath;
-            // fd = path.join(strippedPath, 'image1.png');
-            localStorage.setItem('finalImageFolder', strippedPath);
-        }
-        
-        if (typeofmessage == 'tn') {
-            tn=messagecode;
-            document.getElementById('python-output').innerHTML = tn + ': Images Uploaded';
-            
-        }
+      if (typeofmessage == 'cd') {
+          cd=messagecode;
+          let percentageDone = cd/tn*100;
+          console.log(percentageDone);
+          var progressBar = document.getElementById("progress-bar");
+          progressBar.setAttribute("aria-valuenow", percentageDone);
+          progressBar.style.width = percentageDone + "%";
+          // progressBar.value = percentageDone;
+          outputMessage = document.getElementById('python-output');
+          // outputMessage.classList.replace("alert-info", "alert-success");
+          outputMessage.innerHTML = '<i class="bi bi-info-circle-fill"></i>' + cd + ' of ' + tn + ' Images Processed';
+      }
 
-        if (typeofmessage == 'cd') {
-            let cd=messagecode;
-            let percentageDone = cd/tn*100;
-            console.log(percentageDone);
-            var progressBar = document.getElementById("myProgress");
-            progressBar.value = percentageDone;
-            document.getElementById('python-output').innerHTML = cd + ' of ' + tn + ' Images Processed';
-        }
-
-        if (typeofmessage == 'er') {
-            if (messagecode==0) {
-                console.log(messagecode)
-                console.log('no stitching needed')
-                console.log(fd);
-                var fileOpenButton = document.getElementById('file-open-button');
-                var fileCopyButton = document.getElementById('copy-path-button');
-                fileOpenButton.style.display = 'block';
-                fileCopyButton.style.display = 'block';
-                finalImagePath = localStorage.getItem('finalImagePath');
-                shell.openPath(finalImagePath);
-            }
-            if (messagecode==1) {
-                console.log(messagecode)
-                console.log('needs stitching')
-                window.location.href = 'autostitch-manualstitcher.html';                 // Redirect to autostitcher-maualstitcher HTML file
-            }
-        }
-        if (typeofmessage == 'finished') {
-            let strippedPath = message.replace(/^finished:/, '');
-            // shell.openPath(strippedPath);
-            localStorage.setItem('finalImagePath', strippedPath);
-        }
+      if (typeofmessage == 'er') {
+          if (messagecode==0) {
+              console.log(messagecode)
+              console.log('no stitching needed')
+              // console.log(fd);
+              var fileOpenButton = document.getElementById('file-open-button');
+              var fileCopyButton = document.getElementById('copy-path-button');
+              outputMessage = document.getElementById('python-output');
+              outputMessage.classList.replace("alert-info", "alert-success");
+              outputMessage.innerHTML = '<i class="bi bi-check-lg"></i> All Images Stitched Successfully!';
+              fileOpenButton.style.display = 'block';
+              fileCopyButton.style.display = 'block';
+              finalImagePath = localStorage.getItem('finalImagePath');
+              shell.openPath(finalImagePath);
+          }
+          if (messagecode==1) {
+              console.log(messagecode)
+              console.log('needs stitching')
+              window.location.href = 'autostitch-manualstitcher.html';                 // Redirect to autostitcher-maualstitcher HTML file
+          }
+      }
+      if (typeofmessage == 'finished') {
+          let strippedPath = message.replace(/^finished:/, '');
+          // shell.openPath(strippedPath);
+          localStorage.setItem('finalImagePath', strippedPath);
+      }
     });
     
     // end the input stream and allow the process to exit
@@ -123,9 +130,17 @@ copyFilePath = () => {
     let finalImageFolder = localStorage.getItem('finalImageFolder');
     console.log(finalImageFolder);
     navigator.clipboard.writeText(finalImageFolder);
+    var fileCopyButton = document.getElementById('copy-path-button');
+    fileCopyButton.innerHTML = '<i class="bi bi-clipboard-check"></i> Copy Path to Clipboard';
+    setTimeout(function(){
+        fileCopyButton.innerHTML = '<i class="bi bi-clipboard"></i> Copy Path to Clipboard';
+    },1000);
 }
 
-
+cancelProcess = () => {
+    pyshell.kill();
+    console.log('process cancelled');
+}
 // Tour
   // Initialize the Shepherd.js Tour
   const Shepherd = require('shepherd.js')
