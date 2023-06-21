@@ -124,3 +124,73 @@ copyFilePath = () => {
     console.log(finalImageFolder);
     navigator.clipboard.writeText(finalImageFolder);
 }
+
+
+// Tour
+  // Initialize the Shepherd.js Tour
+  document.addEventListener('DOMContentLoaded', function() {
+    const tour = new Shepherd.Tour({
+      useModalOverlay: true,
+      defaultStepOptions: {
+        classes: 'shepherd-theme-arrows',
+        // scrollTo: true,
+        // buttons: [
+        //   {
+        //     text: 'Next',
+        //     action: tour.next,
+        //   },
+        // ],
+      },
+      
+      steps: [
+        {
+          id: 'step1',
+          attachTo: {
+            element: '.boxy .box:nth-child(1) bottom',
+            
+          },
+          title: 'Step 1',
+          text: 'This is the first box. It contains a button to clear images.',
+        },
+        {
+          id: 'step2',
+          attachTo: {
+            element: '.boxy .box:nth-child(2)',
+            on: 'bottom',
+          },
+          title: 'Step 2',
+          text: 'This is the second box. It contains a label and an input for uploading files.',
+        },
+        {
+          id: 'step3',
+          attachTo: {
+            element: '.boxy .box:nth-child(3)',
+            on: 'bottom',
+          },
+          title: 'Step 3',
+          text: 'This is the third box. It contains a button to save the image.',
+        },
+        {
+          id: 'step4',
+          attachTo: {
+            element: '.boxy .box:nth-child(4)',
+            on: 'bottom',
+          },
+          title: 'Step 4',
+          text: 'This is the fourth box. It contains a button to go back to the index page.',
+        },
+        {
+          id: 'step5',
+          attachTo: {
+            element: '#opacityRange',
+            on: 'top',
+          },
+          title: 'Step 5',
+          text: 'This is the opacity range slider.',
+        },
+      ],
+    });
+
+    // Start the tour
+    tour.start();
+  });
