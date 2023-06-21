@@ -143,20 +143,33 @@ cancelProcess = () => {
     console.log('process cancelled');
 }
 // Tour
-  // Initialize the Shepherd.js Tour
-  const Shepherd = require('shepherd.js')
-  let tour = null;
+// Initialize the Shepherd.js Tour
+const Shepherd = require('shepherd.js')
+let tour = null;
 
-  function startTour() {
-    if (tour) {
-      tour.start();
-      return;
-    }
+
+function startTour() {
+  if (tour) {
+    var fileOpenButton = document.getElementById('file-open-button');
+    var fileCopyButton = document.getElementById('copy-path-button');
+    fileOpenButton.style.display = 'block';
+    fileCopyButton.style.display = 'block';
+    tour.start();
   }
+}
 
   tour = new Shepherd.Tour({
     useModalOverlay: true,
   });
+
+  tourCancelAction = () => {
+    tour.cancel();
+    console.log('tour cancelled');
+    var fileOpenButton = document.getElementById('file-open-button');
+    var fileCopyButton = document.getElementById('copy-path-button');
+    fileOpenButton.style.display = 'none';
+    fileCopyButton.style.display = 'none';
+  }
 
   steps=[{
     id: 'step1',
@@ -174,7 +187,7 @@ cancelProcess = () => {
       },
       {
         text: 'Exit Tour',
-        action: tour.cancel
+        action: tourCancelAction
       },
     ],
   },
@@ -194,7 +207,7 @@ cancelProcess = () => {
       },
       {
         text: 'Exit Tour',
-        action: tour.cancel
+        action: tourCancelAction
       },
     ],
   },
@@ -214,7 +227,7 @@ cancelProcess = () => {
       },
       {
         text: 'Exit Tour',
-        action: tour.cancel
+        action: tourCancelAction,
       },
     ],
   }

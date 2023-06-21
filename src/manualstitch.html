@@ -44,7 +44,7 @@
     </label>
     <button onclick="saveImage()" class="btn btn-primary btn-lg m-2"><i class="bi bi-download"></i> Save Image</button>
     <label for="opacity" class="form-label m-2" style="color: #ccc;">Opacity:</label>
-    <input type="range" id="opacityRange" min="0" max="1" step="0.1" value="1" class="form-range">
+    <input type="range" id="opacityRange" min="0.3" max="1" step="0.1" value="1" class="form-range">
     <div id="info-output" class="alert alert-info d-none m-0 ms-auto "  role="alert"></div>
     <button type="button" class="btn btn-outline-info btn-lg m-2 ms-auto" onclick="startTour()" data-bs-toggle="tooltip" data-bs-placement="top" title="Click here to get a tour of the page">
       <i class="bi bi-book"></i> Tour
@@ -177,11 +177,19 @@
     layer.on('dragstart', function(event) {
       var image = event.target;
       image.moveToTop();
-      
+      imageName = image.name();
+      console.log(imageName);
       // Get the opacity value from the range input
       var opacityValue = opacityRange.value;
       image.opacity(opacityValue);
       layer.draw();
+      var alertInfo = document.getElementById('info-output');      
+      alertInfo.classList.remove('d-none');
+      alertInfo.innerHTML = imageName + ' Dragged'; 
+      setTimeout(function() {
+        alertInfo.classList.add('d-none');
+        alertInfo.innerHTML = '';
+      }, 1000);
     });
 
     // Reset opacity when drag ends
@@ -281,6 +289,14 @@
       };
       stage.position(newPos);
       stage.batchDraw();
+
+      var alertInfo = document.getElementById('info-output');      
+      alertInfo.classList.remove('d-none');
+      alertInfo.innerHTML = ' Dragged'; 
+      setTimeout(function() {
+        alertInfo.classList.add('d-none');
+        alertInfo.innerHTML = '';
+      }, 1000);
     }
 
     // Add scroll event listener
