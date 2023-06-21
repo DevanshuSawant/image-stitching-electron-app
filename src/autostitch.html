@@ -37,12 +37,15 @@
   </head>
   <body>
     <div class="boxy">
+      <a href="#" class="box">
+        <button onclick="startTour()" class="box-content">Start Tour</button>
+      </a>
       <button onclick="showInFolder()" id="file-open-button" style="display: none;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show In Folder">Show In Folder</button>
       <button onclick="copyFilePath()" id="copy-path-button" style="display: none;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Copy Folder Path">Copy Folder Path</button>
       <a href="./index.html" class="box">
         <button class="box-content" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Go Back">Go Back ←</button>
       </a>
-      <a href="#" class="box">
+      <a href="#" class="box" id="uploadtour">
         <label for="image-upload" class="box-content" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Upload Files">Upload Files</label>
         <input type="file" id="image-upload" accept="image/*" multiple class="box-content">
       </a>
