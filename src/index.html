@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <meta charset="UTF-8">
   <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-  <title>Image Stitching Tool</title>
+  <title>AI Image Stitcher</title>
   </head>
   <style>
     html, body {
@@ -32,22 +32,24 @@
       color: white;
       text-align: center;
     }
-    
     .footlink {
       color: #fdfdfd;
       text-decoration: none;
       font-weight: bolder;
       cursor: pointer;
     }
+    .smtimage {
+      cursor: pointer;
+    }
+
   </style>
 <body>
   <div class=" text-center h-75">
-    <div class="smtimage">
-      
-      <h3 class="smtname m-4"><img src="./assets/smt.ico" class="smticon"> Surface Modification Technologies Pvt. Ltd.</h3>
+    <div class="smtimage" onclick="openSMTLink()" data-bs-toggle="tooltip" data-bs-placement="top" title="Go to SMT Website">
+      <h3 class="smtname m-4"><img src="./assets/smt.ico" class="smticon" alt="SMT Logo"> Surface Modification Technologies Pvt. Ltd.</h3>
     </div>
     <div class="IMT">
-      <h2><b>Image Stitching Tool</b></h2>
+      <h2><b>AI Image Stitcher</b></h2>
     </div>
 
     <div class="row m-4 justify-content-center">
@@ -58,33 +60,40 @@
           </div>
           <div class="card-body">
             <p class="card-text">Automatically stitch images to create one continuous image by selecting the images to be stitched</p>
-            <button onclick="openHistoryFolder()" id="file-open-button" class="w-100 btn btn-lg btn-outline-secondary" style="margin-bottom: 10px;"> Stitching History Folder <i class="bi bi-clock-history"></i></button>
-            <a href="autostitch.html" class="w-100 btn btn-lg btn-primary" role="button"> Next <i class="bi bi-arrow-right-circle"></i></a>
+            <button onclick="openHistoryFolder()" id="file-open-button" class="w-100 btn btn-lg btn-outline-secondary" style="margin-bottom: 10px; color: #fdfdfd;" data-bs-toggle="tooltip" data-bs-placement="left" title="Open Folder to show past stitched images"> Previously Stitched Images <i class="bi bi-clock-history"></i></button>
+            <a href="autostitch.html" class="w-100 btn btn-lg btn-primary" role="button" data-bs-toggle="tooltip" data-bs-placement="left" title="Go to Auto Image Stitcher"> Next <i class="bi bi-arrow-right-circle"></i></a>
           </div>
         </div>
       </div>
       <div class="col-4">
         <div class="card mb-4 rounded-3 shadow-sm border-primary equal-card" >
-          <div class="card-header py-3">
+          <div class="card-header py-3" >
             <h4 class="my-0 fw-normal"  style="color: #fdfdfd;">Manual Image Stitcher</h4>
           </div>
           <div class="card-body">
             <p class="card-text">Manually stitch images to create one continuous image by dragging and dropping images to align the images to be stitched</p>
-            <a href="manualstitch.html" class="w-100 btn btn-lg btn-outline-primary" role="button"> Next <i class="bi bi-arrow-right-circle"></i></a>
+            <a href="manualstitch.html" class="w-100 btn btn-lg btn-outline-primary" role="button" data-bs-toggle="tooltip" data-bs-placement="right" title="Go to Manual Image Stitcher"> Next <i class="bi bi-arrow-right-circle"></i></a>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="footer">
-    <p style="margin-top: 8px; margin-bottom: 8px; margin-left: 8px;">Made with ❤️ by <a class="footlink" target="_blank" onclick="openSAKECLink()"><b>Shah & Anchor Kutchhi Engineering College</b></a></p>
+    <p style="margin-top: 8px; margin-bottom: 8px; margin-left: 8px;">Made with ❤️ by <a class="footlink" target="_blank" onclick="openSAKECLink()"  data-bs-toggle="tooltip" data-bs-placement="top" title="Go to Shah & Anchor Kutchhi Engineering College Website"><b>Shah & Anchor Kutchhi Engineering College</b></a></p>
   </div>   
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    const { shell } = require('electron');
+    
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
     function openHistoryFolder() {
-      const { shell } = require('electron');
       historyFolder = localStorage.getItem('historyFolder');
-      shell.openPath(historyFolder);
+      shell.openExternal(`file://${historyFolder}`);
+
       var fileOpenButton = document.getElementById('file-open-button');
       fileOpenButton.innerHTML = ' Stitching History Folder <i class="bi bi-folder-check"></i>';
       setTimeout(function(){
@@ -92,11 +101,14 @@
       },1000);
     }
 
+    function openSMTLink() {
+      shell.openExternal('https://www.smt.co.in/');
+    }
+
     function openSAKECLink() {
-      const { shell } = require('electron');
       shell.openExternal('https://www.sakec.ac.in/');
     }
+
   </script>
 </body>
-
 </html>

@@ -1,22 +1,14 @@
-let {PythonShell} = require('python-shell')
-const {shell} = require('electron') // deconstructing assignment
-const fs = require('fs');
-const path = require('path');
-const { clipboard, nativeImage } = require('electron');
-// const path = require('path');
-// currentPath = path.join(__dirname, 'result-images');
+// const fs = require('fs');
 
 
 let options_exe = {
     mode : 'text',
     pythonPath: 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe',
-    // scriptPath: 'src/',
 };
 
 let options_py = {
     mode : 'text',
     pythonOptions: ['-u'], // get print results in real-time
-    // scriptPath: 'engine/',
 };
 
 // possible type of messages passed by python code to javascript
@@ -24,27 +16,36 @@ let options_py = {
 // cd = current number of images currently processed
 // er = error message to see if manual stitching is required
 // fd = file directory of the stitched image
+let {PythonShell} = require('python-shell')
 // let pyshell = new PythonShell("./src/engine/upload_multiple.py", options_py);  // for when py is converted to exe
-
 let pyshell = new PythonShell("./resources/app/src/upload_multiple.exe", options_exe);  // for when py is converted to exe
-// let pyshell = new PythonShell('upload_multiple.py', options_py);
+
 fileNames = [];
+hasPythonCodeRun = false;
 var imageUpload = document.getElementById('image-upload');
 imageUpload.addEventListener('change', function(event) {
+  // Reset state to before python code was run
+  const path = require('path');
+  hasPythonCodeRun = false;
   var files = event.target.files;
   for (var i = 0; i < files.length; i++) {
       fileNames.push(files[i].path);
   }
+  console.log(event.target.files);
   pyshell.send(fileNames);
   console.log(fileNames);
   
   pythonRunner();
+  hasPythonCodeRun = true;
+  var imageUploadLabel = document.getElementById('uploadtour');
+  imageUploadLabel.classList.add("d-none");
+
   // imageUpload.disabled = true;
 });
 
 
   
-pythonRunner = () => {
+function pythonRunner() {
     // console.log(pyPaths);
 
     pyshell.on('message', function (message) {
@@ -101,6 +102,7 @@ pythonRunner = () => {
               fileOpenButton.style.display = 'block';
               fileCopyButton.style.display = 'block';
               finalImagePath = localStorage.getItem('finalImagePath');
+              const {shell} = require('electron') // deconstructing assignment
               shell.openPath(finalImagePath);
           }
           if (messagecode==1) {
@@ -127,7 +129,7 @@ pythonRunner = () => {
 
 showInFolder = () => {
     let finalImageFolder = localStorage.getItem('finalImageFolder');
-    shell.openPath(finalImageFolder);
+    shell.openExternal(`file://${finalImageFolder}`);
     
     var fileOpenButton = document.getElementById('file-open-button');
     fileOpenButton.innerHTML = '<i class="bi bi-folder-check"></i> Show Image In File Explorer';
@@ -143,6 +145,7 @@ copyImageToClipBoard = () => {
       fileCopyButton.innerHTML = '<i class="bi bi-clipboard"></i> Copy Image to Clipboard';
   },1000);
   finalImagePath = localStorage.getItem('finalImagePath');
+  const { clipboard, nativeImage } = require('electron');
   const image = nativeImage.createFromPath(finalImagePath);
   clipboard.writeImage(image);
 }
@@ -153,7 +156,7 @@ cancelProcess = () => {
 }
 // Tour
 // Initialize the Shepherd.js Tour
-const Shepherd = require('shepherd.js')
+// const Shepherd = require('shepherd.js')
 let tour = null;
 
 
@@ -174,10 +177,12 @@ function startTour() {
   tourCancelAction = () => {
     tour.cancel();
     console.log('tour cancelled');
+    if (hasPythonCodeRun == false) {
     var fileOpenButton = document.getElementById('file-open-button');
     var fileCopyButton = document.getElementById('copy-path-button');
     fileOpenButton.style.display = 'none';
     fileCopyButton.style.display = 'none';
+    }
   }
 
   steps=[{
