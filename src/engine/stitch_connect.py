@@ -2,7 +2,8 @@ import cv2
 import os
 import glob
 import sys
-
+import shutil
+import time
 import custom_stitch as cust
 
 
@@ -18,6 +19,39 @@ def delete_images(folder_path):
     for image_file in image_files:
         os.remove(image_file)
         # print(f"Deleted {image_file}")
+
+
+
+def copy_files(source_folder, destination_folder):
+    # Get the list of files in the source folder
+    files = os.listdir(source_folder)
+
+    # Iterate over the files
+    for file_name in files:
+        # Construct the full file paths
+        source_path = os.path.join(source_folder, file_name)
+        destination_path = os.path.join(destination_folder, file_name)
+
+        # Copy the file
+        shutil.copy2(source_path, destination_path)
+
+        # Get the file's modification timestamp
+        timestamp = os.path.getmtime(source_path)
+
+        # Convert the timestamp to a readable format
+        timestamp_str = time.strftime("%Y%m%d%H%M%S", time.localtime(timestamp))
+
+        # Create the new file name by appending the timestamp
+        new_file_name = f"{timestamp_str}_{file_name}"
+
+        # Construct the full destination path with the new file name
+        new_destination_path = os.path.join(destination_folder, new_file_name)
+
+        # Rename the file
+        os.rename(destination_path, new_destination_path)
+        print(f"Copied {file_name} to {new_destination_path}")
+
+
         
 save_folder = 'result-images'
 # directory = os.path.dirname(os.path.abspath(save_folder))
@@ -33,6 +67,7 @@ def getStitchResult(filenames):
     final_directory1 = os.path.join(directory,save_folder2)
     print(f'finished:{final_directory1}') # final directory where the result image will be stored
     sys.stdout.flush()
+    
     save_folder = 'result-images'
     directory = os.path.dirname(os.path.abspath(save_folder))
     final_directory = os.path.join(directory,save_folder)
@@ -145,6 +180,13 @@ def getStitchResult(filenames):
 
     # Create the directory
     os.makedirs(final_directory, exist_ok=True)
+    
+    history_folder = 'result-images-history'
+    history_directory = os.path.dirname(os.path.abspath(history_folder))
+    final_history_directory = os.path.join(history_directory,history_folder)
+    os.makedirs(final_history_directory, exist_ok=True)
+    copy_files(final_directory,final_history_directory)
+
     delete_images(save_folder)
     # Save all images together
     buckets = [resultImageBucket, imageBucket]

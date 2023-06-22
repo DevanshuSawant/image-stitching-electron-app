@@ -93,6 +93,8 @@ out/
 
 # result-images
 result-images/
+result-images-history/
+
 
 # pyinstaller build files
 src/engine/build/

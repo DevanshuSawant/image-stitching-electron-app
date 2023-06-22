@@ -24,22 +24,22 @@ let options_py = {
 // cd = current number of images currently processed
 // er = error message to see if manual stitching is required
 // fd = file directory of the stitched image
-let pyshell = new PythonShell("./src/engine/upload_multiple.py", options_py);  // for when py is converted to exe
+// let pyshell = new PythonShell("./src/engine/upload_multiple.py", options_py);  // for when py is converted to exe
 
-// let pyshell = new PythonShell("./resources/app/src/upload_multiple.exe", options_exe);  // for when py is converted to exe
+let pyshell = new PythonShell("./resources/app/src/upload_multiple.exe", options_exe);  // for when py is converted to exe
 // let pyshell = new PythonShell('upload_multiple.py', options_py);
 fileNames = [];
 var imageUpload = document.getElementById('image-upload');
 imageUpload.addEventListener('change', function(event) {
-    var files = event.target.files;
-    for (var i = 0; i < files.length; i++) {
-        fileNames.push(files[i].path);
-    }
-    pyshell.send(fileNames);
-    console.log(fileNames);
-    
-    pythonRunner();
-
+  var files = event.target.files;
+  for (var i = 0; i < files.length; i++) {
+      fileNames.push(files[i].path);
+  }
+  pyshell.send(fileNames);
+  console.log(fileNames);
+  
+  pythonRunner();
+  // imageUpload.disabled = true;
 });
 
 
@@ -62,6 +62,9 @@ pythonRunner = () => {
           // outputMessage.innerHTML = "Stitched image will be saved at: " + strippedPath;
           // fd = path.join(strippedPath, 'image1.png');
           localStorage.setItem('finalImageFolder', strippedPath);
+          historyFolder = strippedPath.replace('result-images', 'result-images-history');
+          localStorage.setItem('historyFolder', historyFolder);
+          
       }
       
       if (typeofmessage == 'tn') {
@@ -82,7 +85,7 @@ pythonRunner = () => {
           // progressBar.value = percentageDone;
           outputMessage = document.getElementById('python-output');
           // outputMessage.classList.replace("alert-info", "alert-success");
-          outputMessage.innerHTML = '<i class="bi bi-info-circle-fill"></i>' + cd + ' of ' + tn + ' Images Processed';
+          outputMessage.innerHTML = '<i class="bi bi-info-circle-fill"></i> ' + cd + ' of ' + tn + ' Images Processed';
       }
 
       if (typeofmessage == 'er') {
@@ -125,17 +128,23 @@ pythonRunner = () => {
 showInFolder = () => {
     let finalImageFolder = localStorage.getItem('finalImageFolder');
     shell.openPath(finalImageFolder);
+    
+    var fileOpenButton = document.getElementById('file-open-button');
+    fileOpenButton.innerHTML = '<i class="bi bi-folder-check"></i> Show Image In File Explorer';
+    setTimeout(function(){
+      fileOpenButton.innerHTML = '<i class="bi bi-folder"></i> Show Image In File Explorer';
+    },1000);
 }
 
 copyImageToClipBoard = () => {
-  finalImagePath = localStorage.getItem('finalImagePath');
-  const image = nativeImage.createFromPath(finalImagePath);
-  clipboard.writeImage(image);
   var fileCopyButton = document.getElementById('copy-path-button');
   fileCopyButton.innerHTML = '<i class="bi bi-clipboard-check"></i> Copy Image to Clipboard';
   setTimeout(function(){
       fileCopyButton.innerHTML = '<i class="bi bi-clipboard"></i> Copy Image to Clipboard';
   },1000);
+  finalImagePath = localStorage.getItem('finalImagePath');
+  const image = nativeImage.createFromPath(finalImagePath);
+  clipboard.writeImage(image);
 }
 
 cancelProcess = () => {
