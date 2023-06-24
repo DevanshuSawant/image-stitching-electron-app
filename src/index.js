@@ -14,7 +14,7 @@ const createWindow = () => {
     width: 800,
     height: 600,
     show:false,
-    icon: './resources/app/src/assets/square-smt-logo.png',
+    icon: './resources/app/src/assets/square-smt-logo.ico',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
@@ -23,7 +23,7 @@ const createWindow = () => {
     },
   });
   var splash = new BrowserWindow({ 
-    icon: './resources/app/src/assets/square-smt-logo.png',
+    icon: './resources/app/src/assets/square-smt-logo.ico',
     width: 640, 
     height: 352, 
     transparent: true, 

@@ -36,7 +36,6 @@ imageUpload.addEventListener('change', function(event) {
   console.log(fileNames);
   
   pythonRunner();
-  hasPythonCodeRun = true;
   var imageUploadLabel = document.getElementById('uploadtour');
   imageUploadLabel.classList.add("d-none");
 
@@ -90,26 +89,27 @@ function pythonRunner() {
       }
 
       if (typeofmessage == 'er') {
-          if (messagecode==0) {
-              console.log(messagecode)
-              console.log('no stitching needed')
-              // console.log(fd);
-              var fileOpenButton = document.getElementById('file-open-button');
-              var fileCopyButton = document.getElementById('copy-path-button');
-              outputMessage = document.getElementById('python-output');
-              outputMessage.classList.replace("alert-info", "alert-success");
-              outputMessage.innerHTML = '<i class="bi bi-check-lg"></i> All Images Stitched Successfully!';
-              fileOpenButton.style.display = 'block';
-              fileCopyButton.style.display = 'block';
-              finalImagePath = localStorage.getItem('finalImagePath');
-              const {shell} = require('electron') // deconstructing assignment
-              shell.openPath(finalImagePath);
-          }
-          if (messagecode==1) {
-              console.log(messagecode)
-              console.log('needs stitching')
-              window.location.href = 'autostitch-manualstitcher.html';                 // Redirect to autostitcher-maualstitcher HTML file
-          }
+        hasPythonCodeRun = true;
+        if (messagecode==0) {
+            console.log(messagecode)
+            console.log('no stitching needed')
+            // console.log(fd);
+            var fileOpenButton = document.getElementById('file-open-button');
+            var fileCopyButton = document.getElementById('copy-path-button');
+            outputMessage = document.getElementById('python-output');
+            outputMessage.classList.replace("alert-info", "alert-success");
+            outputMessage.innerHTML = '<i class="bi bi-check-lg"></i> All Images Stitched Successfully!';
+            fileOpenButton.style.display = 'block';
+            fileCopyButton.style.display = 'block';
+            finalImagePath = localStorage.getItem('finalImagePath');
+            const {shell} = require('electron') // deconstructing assignment
+            shell.openPath(finalImagePath);
+        }
+        if (messagecode==1) {
+            console.log(messagecode)
+            console.log('needs stitching')
+            window.location.href = 'autostitch-manualstitcher.html';                 // Redirect to autostitcher-maualstitcher HTML file
+        }
       }
       if (typeofmessage == 'finished') {
           let strippedPath = message.replace(/^finished:/, '');
@@ -126,6 +126,8 @@ function pythonRunner() {
     console.log('finished');
     });
 }
+
+const {shell} = require('electron') // deconstructing assignment
 
 showInFolder = () => {
     let finalImageFolder = localStorage.getItem('finalImageFolder');
@@ -156,7 +158,8 @@ cancelProcess = () => {
 }
 // Tour
 // Initialize the Shepherd.js Tour
-// const Shepherd = require('shepherd.js')
+const Shepherd = require('shepherd.js')
+
 let tour = null;
 
 
@@ -187,11 +190,11 @@ function startTour() {
 
   steps=[{
     id: 'step1',
-   title: 'Upload Files',
+   title: 'Upload Images',
     text: 'Click this button to upload your images to the automatic stitcher.',
     attachTo: {
       element: '#uploadtour',
-      on: 'right',
+      on: 'bottom',
     },
     classes: 'step-class',
     buttons: [
