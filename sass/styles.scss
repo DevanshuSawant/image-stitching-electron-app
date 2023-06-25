@@ -1,19 +1,17 @@
-@import '../node_modules/bootstrap/scss/bootstrap.scss';
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
 
-
-body{
-    background-color:#312F49;
+body {
+  background-color: #312f49;
 }
-.card{
-    background-color: #20033c;  
-    display: flex;
-    margin-right: 10%;
-    margin-left:10%;
+.card {
+  background-color: #20033c;
+  display: flex;
+  margin-right: 10%;
+  margin-left: 10%;
 }
-.card-text{
-    color: #f1f1f1;
+.card-text {
+  color: #f1f1f1;
 }
-.card-title{
-    color: #f1f1f1;
+.card-title {
+  color: #f1f1f1;
 }
-

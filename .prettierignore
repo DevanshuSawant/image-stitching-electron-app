@@ -1,0 +1,4 @@
+# Ignore artifacts:
+src/engine
+result-images
+result-images-history
