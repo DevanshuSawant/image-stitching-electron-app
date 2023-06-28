@@ -4,6 +4,8 @@ import glob
 import sys
 import shutil
 import time
+import matplotlib.pyplot as plt
+import numpy as np
 import custom_stitch as cust
 
 
@@ -132,8 +134,8 @@ def getStitchResult(filenames):
     
             matches = cust.matchKeyPointsKNN(featuresA, featuresB, ratio=0.73, method=feature_extractor)
 
-            img3 = cv2.drawMatches(image2,kpsA,image1,kpsB,matches,
-                           None,flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+            # img3 = cv2.drawMatches(image2,kpsA,image1,kpsB,matches,
+            #                None,flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
     
             # plt.imshow(img3)
             # plt.show()
@@ -156,14 +158,40 @@ def getStitchResult(filenames):
             width = image2.shape[1] + image1.shape[1]
             height = max(image2.shape[0], image1.shape[0])
 
+            
             result = cv2.warpPerspective(image2, H, (width-100, height))
-            result[0:image1.shape[0], 0:image1.shape[1]] = image1
+            # Calculate the four corners of image2 in the resulting image
+            corners = np.array([[0, 0, 1], [0, image2.shape[0], 1], [image2.shape[1], image2.shape[0], 1], [image2.shape[1], 0, 1]])
+            transformed_corners = np.dot(H, corners.T)
+            transformed_corners /= transformed_corners[2]  # Homogeneous coordinates normalization
+
+            # Extract the x and y coordinates of the transformed corners
+            x_coords = transformed_corners[0]
+            y_coords = transformed_corners[1]
+
+            # Determine the minimum and maximum x and y coordinates to get the bounding box of image2
+            min_x = np.min(x_coords)
+            min_y = np.min(y_coords)
+
+            overlap_start = (int(min_y), int(min_x),3)
+
+            alpha = 0.7  # Adjust the alpha value as desired
+            
+            
+            # Perform alpha blending
+            blended_region = cv2.addWeighted(result[0:image1.shape[0], 0:image1.shape[1]], alpha, image1, 1-alpha, 0)
+            cropped_image = image1[:, :overlap_start[1]+1, :]
+            # Replace the blended region in the result
+            result[0:image1.shape[0], 0:image1.shape[1]] = blended_region
+            result[0:image1.shape[0], 0:overlap_start[1]+1] = cropped_image
+            # plt.figure(figsize=(20,10))
+            # plt.imshow(cropped_image)
+            # plt.show()
+            # result[0:image1.shape[0], 0:image1.shape[1]] = image1
 
             result = cust.removeBlackBg(result)
             
-            # plt.figure(figsize=(20,10))
-            # plt.imshow(result)
-            # plt.show()
+            
             print(f'cd:{current_number_of_completed_images}') # current number of images currently processed if no error occurs and merged successfully
             sys.stdout.flush()
             
