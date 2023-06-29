@@ -175,15 +175,16 @@ def getStitchResult(filenames):
 
             overlap_start = (int(min_y), int(min_x),3)
 
-            alpha = 0.7  # Adjust the alpha value as desired
+            # Insert the croppped image to the result image to get rid of the black background
+            cropped_image = image1[:, :overlap_start[1]+10, :]
+            result[0:image1.shape[0], 0:overlap_start[1]+10] = cropped_image
             
             
             # Perform alpha blending
+            alpha = 0.5  # Adjust the alpha value as desired
             blended_region = cv2.addWeighted(result[0:image1.shape[0], 0:image1.shape[1]], alpha, image1, 1-alpha, 0)
-            cropped_image = image1[:, :overlap_start[1]+1, :]
             # Replace the blended region in the result
             result[0:image1.shape[0], 0:image1.shape[1]] = blended_region
-            result[0:image1.shape[0], 0:overlap_start[1]+1] = cropped_image
             # plt.figure(figsize=(20,10))
             # plt.imshow(cropped_image)
             # plt.show()
