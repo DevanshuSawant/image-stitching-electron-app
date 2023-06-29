@@ -176,8 +176,8 @@ def getStitchResult(filenames):
             overlap_start = (int(min_y), int(min_x),3)
 
             # Insert the croppped image to the result image to get rid of the black background
-            cropped_image = image1[:, :overlap_start[1]+10, :]
-            result[0:image1.shape[0], 0:overlap_start[1]+10] = cropped_image
+            cropped_image = image1[:, :overlap_start[1]+16, :]
+            result[0:image1.shape[0], 0:overlap_start[1]+16] = cropped_image
             
             
             # Perform alpha blending
@@ -227,11 +227,13 @@ def getStitchResult(filenames):
         for index, image in enumerate(buckets[i]):
             if i == 0:
                 filename = os.path.join(save_folder, f'image{index}.png')
+                cv2.addWeighted(image, 0.5, image, 0.5, 10)
                 cv2.imwrite(filename, image)
                 final_index = index
             elif i == 1:
                 final_index += (index + 1)
                 filename = os.path.join(save_folder, f'image{final_index}.png')
+                cv2.addWeighted(image, 0.5, image, 0.5, 10)
                 cv2.imwrite(filename, image)
                 
                 
