@@ -1,6 +1,6 @@
 import sys
 import stitch_connect as stcu
-import time 
+import time
 
 start_time = time.time()
 
@@ -13,7 +13,7 @@ while True:
         break
     file_paths.append(line)
 
-fileArray = file_paths[0].split(',')
+fileArray = file_paths[0].split(",")
 stcu.getStitchResult(fileArray)
 
 print("s:%s" % (time.time() - start_time))
