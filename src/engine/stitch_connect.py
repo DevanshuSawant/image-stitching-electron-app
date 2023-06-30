@@ -227,13 +227,13 @@ def getStitchResult(filenames):
         for index, image in enumerate(buckets[i]):
             if i == 0:
                 filename = os.path.join(save_folder, f'image{index}.png')
-                cv2.addWeighted(image, 0.5, image, 0.5, 10)
+                cv2.addWeighted(image, 0.5, image, 0.5, 15)
                 cv2.imwrite(filename, image)
                 final_index = index
             elif i == 1:
                 final_index += (index + 1)
                 filename = os.path.join(save_folder, f'image{final_index}.png')
-                cv2.addWeighted(image, 0.5, image, 0.5, 10)
+                cv2.addWeighted(image, 0.5, image, 0.5, 15)
                 cv2.imwrite(filename, image)
                 
                 
