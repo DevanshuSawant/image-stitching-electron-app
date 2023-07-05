@@ -100,4 +100,4 @@ result-images-history/
 src/engine/build/
 src/engine/dist/
 src/engine/*.spec
-src/engine/_pycaache_/
+src/engine/__pycache__

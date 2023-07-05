@@ -93,6 +93,8 @@ def getStitchResult(filenames):
     resultImageBucket = []
     previousRunBucket = []
     altImageBucket = []
+    gamma = 13
+    alpha = 0.5
     number_of_images = len(filenames)
     current_number_of_completed_images = 0
     print(f"tn:{number_of_images}")  # total no of images sent to js file
@@ -106,6 +108,15 @@ def getStitchResult(filenames):
     while True:
         if len(imageBucket) < 2:
             current_number_of_completed_images += 1
+            image = imageBucket.pop(0)
+            image = cv2.addWeighted(
+                        image,
+                        0.5,
+                        image,
+                        0.5,
+                        gamma,
+                    )
+            imageBucket.insert(0, image)
             print(
                 f"cd:{current_number_of_completed_images}"
             )  # current number of images currently processed if no of images are less than 2
@@ -165,10 +176,11 @@ def getStitchResult(filenames):
                 # print('Storing in Buffer')
                 error_message = 1
                 if len(previousRunBucket) > 0:
-                    image1 = altImageBucket.pop(0)
-                    print(
-                        "Couldnt stitch the images so cleared the buffer and did blending for previous stitched image"
-                    )
+                    if len(altImageBucket) > 0:
+                        image1 = altImageBucket.pop(0)
+                        print(
+                            "Couldnt stitch the images so cleared the buffer and did blending for previous stitched image"
+                        )
 
                 resultImageBucket.append(image1)
                 imageBucket.insert(0, image2)
@@ -220,8 +232,8 @@ def getStitchResult(filenames):
             # plt.show()
 
             # Perform alpha blending
-            alpha = 0.5  # Adjust the alpha value as desired
-            gamma = 13  # Adjust the gamma value as desired
+            # alpha = 0.5  # Adjust the alpha value as desired
+            # gamma = 13  # Adjust the gamma value as desired
             blended_region = cv2.addWeighted(
                 result[0 : image1.shape[0], 0 : image1.shape[1]],
                 alpha,

@@ -15,6 +15,9 @@ let options_py = {
 // cd = current number of images currently processed
 // er = error message to see if manual stitching is required
 // fd = file directory of the stitched image
+// finished = save file location of the stitched image
+
+
 let { PythonShell } = require("python-shell");
 let pyshell = new PythonShell("./src/engine/upload_multiple.py", options_py); // for when py is converted to exe
 // let pyshell = new PythonShell("./resources/app/src/upload_multiple.exe", options_exe);  // for when py is converted to exe
