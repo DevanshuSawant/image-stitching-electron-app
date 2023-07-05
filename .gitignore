@@ -100,4 +100,9 @@ result-images-history/
 src/engine/build/
 src/engine/dist/
 src/engine/*.spec
-src/engine/__pycache__
+src/engine/__pycache__/
+src/engine/*.pyc
+
+#python venv 
+image-stitching-env/
+```

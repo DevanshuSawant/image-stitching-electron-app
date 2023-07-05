@@ -19,8 +19,16 @@ let options_py = {
 
 
 let { PythonShell } = require("python-shell");
-let pyshell = new PythonShell("./src/engine/upload_multiple.py", options_py); // for when py is converted to exe
+
+// Use when testing with python
+// let pyshell = new PythonShell("./src/engine/upload_multiple.py", options_py); // for when py is converted to exe
+
+// Use with pyinstaller created exe
+let pyshell = new PythonShell("./src/upload_multiple.exe", options_exe);  // for when py is converted to exe
+
+// use when building app with exe
 // let pyshell = new PythonShell("./resources/app/src/upload_multiple.exe", options_exe);  // for when py is converted to exe
+
 
 fileNames = [];
 hasPythonCodeRun = false;
@@ -131,10 +139,19 @@ function pythonRunner() {
 
   // end the input stream and allow the process to exit
   pyshell.end(function (err, code, signal) {
-    if (err) throw err;
-    console.log("The exit code was: " + code);
-    console.log("The exit signal was: " + signal);
-    console.log("finished");
+    if (err) {
+      console.log(err);
+      console.log("An error occured");
+      var outputMessage = document.getElementById("python-output");
+      outputMessage.classList.replace("alert-info", "alert-danger");
+      outputMessage.innerHTML = '<i class="bi bi-exclamation-triangle"></i> An Error Occured. Please Try Again.';
+
+      percentageDone = 100;
+      var progressBar = document.getElementById("progress-bar");
+      progressBar.setAttribute("aria-valuenow", percentageDone);
+      progressBar.style.width = percentageDone + "%";
+      progressBar.classList.add("bg-danger");
+    }
   });
 }
 
