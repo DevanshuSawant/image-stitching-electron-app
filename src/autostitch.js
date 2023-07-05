@@ -24,10 +24,10 @@ let { PythonShell } = require("python-shell");
 // let pyshell = new PythonShell("./src/engine/upload_multiple.py", options_py); // for when py is converted to exe
 
 // Use with pyinstaller created exe
-let pyshell = new PythonShell("./src/upload_multiple.exe", options_exe);  // for when py is converted to exe
+// let pyshell = new PythonShell("./src/upload_multiple.exe", options_exe);  // for when py is converted to exe
 
 // use when building app with exe
-// let pyshell = new PythonShell("./resources/app/src/upload_multiple.exe", options_exe);  // for when py is converted to exe
+let pyshell = new PythonShell("./resources/app/src/upload_multiple.exe", options_exe);  // for when py is converted to exe
 
 
 fileNames = [];
