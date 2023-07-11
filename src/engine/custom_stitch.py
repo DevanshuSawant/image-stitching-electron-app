@@ -6,7 +6,7 @@ def detectAndDescribe(image, ort, widthSize, method=None):
     assert method is not None
 
     # detect and extract features from the image
-    descriptor = cv2.xfeatures2d.SIFT_create()
+    descriptor = cv2.SIFT_create()
 
     mask = np.zeros(image.shape[:2], dtype=np.uint8)
     w = image.shape[1]

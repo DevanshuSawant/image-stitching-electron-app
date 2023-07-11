@@ -4,7 +4,7 @@ import glob
 import sys
 import shutil
 import time
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import numpy as np
 import custom_stitch as cust
 
