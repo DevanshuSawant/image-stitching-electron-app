@@ -27,4 +27,16 @@ module.exports = {
     //   config: {},
     // },
   ],
+  publishers: [
+    {
+      name: "@electron-forge/publisher-github",
+      config: {
+        repository: {
+          owner: "DevanshuSawant",
+          name: "image-stitching-electron-app",
+        },
+        prerelease: true,
+      },
+    },
+  ],
 };
