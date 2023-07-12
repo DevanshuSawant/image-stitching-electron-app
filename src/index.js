@@ -23,12 +23,13 @@ const createWindow = () => {
   });
   var splash = new BrowserWindow({
     icon: "./resources/app/src/assets/square-smt-logo.ico",
-    width: 640,
-    height: 352,
+    width: 650,
+    height: 450,
     transparent: true,
     frame: false,
     alwaysOnTop: false,
     resizable: false,
+    
   });
 
   splash.loadFile("./src/splash.html");
@@ -38,7 +39,7 @@ const createWindow = () => {
     mainWindow.center();
     mainWindow.show();
     mainWindow.maximize();
-  }, 9000);
+  }, 11045);
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "index.html"));
