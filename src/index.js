@@ -13,16 +13,16 @@ const createWindow = () => {
     width: 800,
     height: 600,
     show: false,
-    icon: "./resources/app/src/assets/square-smt-logo.ico",
+    icon: "./resources/app/src/assets/square-smt-logo.png",
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      // preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
     },
   });
   var splash = new BrowserWindow({
-    icon: "./resources/app/src/assets/square-smt-logo.ico",
+    icon: "./resources/app/src/assets/square-smt-logo.png",
     width: 650,
     height: 450,
     transparent: true,

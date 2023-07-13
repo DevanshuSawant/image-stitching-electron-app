@@ -35,7 +35,7 @@ module.exports = {
           owner: "DevanshuSawant",
           name: "image-stitching-electron-app",
         },
-        prerelease: true,
+        // prerelease: true,
       },
     },
   ],
