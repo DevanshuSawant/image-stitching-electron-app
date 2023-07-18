@@ -39,7 +39,7 @@ const createWindow = () => {
     mainWindow.center();
     mainWindow.show();
     mainWindow.maximize();
-  }, 11045);
+  }, 11100);
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "index.html"));
@@ -53,14 +53,6 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.on("ready", createWindow);
 
-app.on('ready', () => {
-  updateApp = require('update-electron-app');
-
-  updateApp({
-      updateInterval: '1 hour',
-      notifyUser: true
-  });
-});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

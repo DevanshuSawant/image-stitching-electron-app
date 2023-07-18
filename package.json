@@ -1,6 +1,6 @@
 {
   "name": "image-stitching",
-  "productName": "image-stitching",
+  "productName": "AI Image Stitcher",
   "version": "1.1.0",
   "description": "Image Stitching App v1",
   "repository": "https://github.com/DevanshuSawant/image-stitching-electron-app",
