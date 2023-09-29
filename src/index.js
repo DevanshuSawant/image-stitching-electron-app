@@ -39,11 +39,11 @@ const createWindow = () => {
     mainWindow.center();
     mainWindow.show();
     mainWindow.maximize();
-  }, 1110);
+  }, 11100);
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "index.html"));
-  mainWindow.setMenuBarVisibility(true);
+  mainWindow.setMenuBarVisibility(false);
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
 };
@@ -72,11 +72,18 @@ ipcMain.on("getImages", (event) => {
   event.reply("imagePaths", imagePaths);
 });
 
-ipcMain.on("get-path", (event) => {
+ipcMain.on("get-result-path", (event) => {
   const path = require("path");
   const fs = require("fs");
   const imagePaths = fs.readdirSync(path.join("result-images"));
-  ipcMain.send("get-path-reply", imagePaths);
+  ipcMain.send("get-result-path-reply", imagePaths);
+});
+
+ipcMain.on("get-history-path", (event) => {
+  const path = require("path");
+  const fs = require("fs");
+  const imagePaths = fs.readdirSync(path.join("result-images"));
+  ipcMain.send("get-history-path-reply", imagePaths);
 });
 
 app.on("activate", () => {

@@ -396,7 +396,24 @@
       link.href = dataURL;
       link.download = 'image.png';
       link.click();
-      console.log('Saved imagye!');
+      console.log('Saved image!');
+      var dataURL = stage.toDataURL({ pixelRatio: 1 });
+
+      // Remove the data URL prefix (e.g., "data:image/png;base64,")
+      var base64Data = dataURL.replace(/^data:image\/png;base64,/, '');
+      let imageName = new Date().toISOString().replace(/:/g, '-') + '.png';
+      // Specify the file path where you want to save the image
+      var filePath = path.join(__dirname,'..', 'result-images-history', imageName); // Update with your desired file path
+
+      // Write the image data to a file
+      fs.writeFileSync(filePath, base64Data, 'base64', function (err) {
+        if (err) {
+          console.error('Error saving image:', err);
+        } else {
+          console.log('Image saved successfully.');
+        }
+      });
+
       // Restore the original stage size and position
       stage.width(originalStageWidth);
       stage.height(originalStageHeight);
