@@ -16,6 +16,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        background-image: url('./assets/bg-image.png');
+        background-size: cover; /* Adjust as needed */
+        background-repeat: no-repeat; /* Adjust as needed */
+        color: black;
       }
       .card-img-left {
         padding-left: 0;
@@ -25,7 +29,7 @@
         left: 0;
         bottom: 0;
         width: 100%;
-        background-color: rgb(45, 12, 88);
+        background-color: #6c757d;
         color: white;
         text-align: center;
         }
@@ -54,20 +58,20 @@
      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/css/shepherd.css"/>
   </head>
   <body>
-    <div class="card text-center">
+    <div class="card text-center" style="background-color: #9DB2BF; border-color: rgb(255, 0, 0);border-width: 3px; border-style: solid;">
       <div class="row g-0 m-4">
         <div class="col-md-4">
           <img src="./assets/example-image-autostitcher-transparent.png" class="rounded float-start img-fluid card-img-left" alt="Image Being Stitched">
         </div>
         <div class="col-md-8">
           <div class="card-body">
-            <h1 class="card-title">Automatic Image Stitcher</h1>
+            <h1 class="card-title" style="color: black;">Automatic Image Stitcher</h1>
             <div class="row row-cols-2">
               <div class="col-6 d-grid">
                 <a href="./index.html"id="backtour" class="btn btn-secondary btn-lg my-4" onclick="cancelProcess()" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Go back to home screen"><i class="bi bi-arrow-left-circle"></i> Back</a>
               </div>
               <div class="col-6 d-grid">
-                <button type="button" id="tourtour" class="btn btn-outline-info btn-lg my-4" onclick="startTour()" data-bs-toggle="tooltip" data-bs-placement="top" title="Get a tour of the page"><i class="bi bi-book"></i> Tour</button>
+                <button type="button" id="tourtour" style="color: black; border-color: black" class="btn btn-outline-info btn-lg my-4" onclick="startTour()" data-bs-toggle="tooltip" data-bs-placement="top" title="Get a tour of the page"><i class="bi bi-book"></i> Tour</button>
               </div>
             </div>
             <div class="row">

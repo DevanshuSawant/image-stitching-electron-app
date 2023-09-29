@@ -104,5 +104,6 @@ src/engine/__pycache__/
 src/engine/*.pyc
 
 #python venv 
-image-stitching-env
+python
+python.zip
 ```

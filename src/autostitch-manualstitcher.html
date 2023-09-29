@@ -12,11 +12,19 @@
     <script src="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/js/shepherd.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/css/shepherd.css"/>  
   <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #9DB2BF;
+      color: black;
+    }
     #container {
       width: 100%;
       height: 85vh;
-      border: 1px solid #ccc;
+      border: 2px solid red;
       overflow: hidden;
+      background-color: #ffffff;
     }
 
     .file-input input[type="file"] {
@@ -31,7 +39,7 @@
       left: 0;
       bottom: 0;
       width: 100%;
-      background-color: rgb(45, 12, 88);
+      background-color: #6c757d;
       color: white;
       text-align: center;
     }
@@ -70,10 +78,10 @@
     </label>
     <button onclick="saveImage()" class="btn btn-primary btn-lg m-2" id="savetour" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Save images to a folder"><i class="bi bi-download"></i> Save Image</button>
     <button onclick="clearImages()" id="clear-images-button" class="btn btn-primary btn-lg m-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Clear images from canvas"><i class="bi bi-x-circle"></i> Clear Images</button>
-    <label for="opacity" class="form-label m-2" style="color: #ccc;">Opacity:</label>
+    <label for="opacity" class="form-label m-2" style="color: black;">Opacity:</label>
     <input type="range" id="opacityRange" min="0.3" max="1" step="0.1" value="1" class="form-range" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Change opacity of dragged image">
     <div id="info-output" class="alert alert-warning  m-0 ms-auto "  role="alert"><i class="bi bi-info-circle-fill"></i> Error: Autostitcher couldn't stitch images</div>
-    <button type="button" id='tourtour' class="btn btn-outline-info btn-lg m-2 ms-auto" onclick="startTour()" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Get a tour of the page">
+    <button type="button" id='tourtour' style="color: black; border-color: black" class="btn btn-outline-info btn-lg m-2 ms-auto" onclick="startTour()" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Get a tour of the page">
       <i class="bi bi-book"></i> Tour
     </button>
   </div>

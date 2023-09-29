@@ -19,13 +19,16 @@
     html,
     body {
       height: 100%;
+      color: black;
     }
     body {
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fdfdfd;
-      /* background-color:  #8482a8; */
+      background-image: url('./assets/bg-image.png');
+      background-size: cover; /* Adjust as needed */
+      background-repeat: no-repeat; /* Adjust as needed */
+      color: black;
     }
     .equal-card {
       height: 100%;
@@ -35,7 +38,7 @@
       left: 0;
       bottom: 0;
       width: 100%;
-      background-color: rgb(45, 12, 88);
+      background-color: #6c757d;
       color: white;
       text-align: center;
     }
@@ -71,8 +74,10 @@
         title="Go to SMT Website"
       >
         <h3 class="smtname m-4">
-          <img src="./assets/smt.ico" class="smticon" alt="SMT Logo" /> Surface
+          <img src="./assets/smt-logo.jpg" class="smticon" alt="SMT Logo" style="height: 50px;" /> Surface
           Modification Technologies Pvt. Ltd.
+          <img src="./assets/smartBRAIN-logo.png" class="p-1" alt="SmartBRAIN Logo" style="width: 200px; margin-right: 20px; margin-top: 20px;">
+
         </h3>
       </div>
       <div class="IMT">
@@ -81,12 +86,12 @@
 
       <div class="row m-4 justify-content-center">
         <div class="col-4">
-          <div class="card mb-4 rounded-3 shadow-sm border-primary equal-card">
+          <div class="card mb-4 rounded-3 shadow-sm equal-card" style="background-color: #ffffff; border-color: rgb(255, 0, 0);border-width: 3px; border-style: solid;">
             <div class="card-header py-3 text-bg-primary border-primary">
               <h4 class="my-0 fw-normal">Automatic Image Stitcher</h4>
             </div>
             <div class="card-body">
-              <p class="card-text">
+              <p class="card-text" style="color: black;">
                 Automatically stitch images to create one continuous image by
                 selecting the images to be stitched
               </p>
@@ -94,7 +99,7 @@
                 onclick="openHistoryFolder()"
                 id="file-open-button"
                 class="w-100 btn btn-lg btn-outline-secondary"
-                style="margin-bottom: 10px; color: #fdfdfd"
+                style="margin-bottom: 10px; color: black"
                 data-bs-toggle="tooltip"
                 data-bs-placement="left"
                 title="Open Folder to show past stitched images"
@@ -115,14 +120,14 @@
           </div>
         </div>
         <div class="col-4">
-          <div class="card mb-4 rounded-3 shadow-sm border-primary equal-card">
+          <div class="card mb-4 rounded-3 shadow-sm equal-card" style="background-color: #ffffff; border-color: rgb(255, 0, 0);border-width: 3px; border-style: solid;">
             <div class="card-header py-3">
-              <h4 class="my-0 fw-normal" style="color: #fdfdfd">
+              <h4 class="my-0 fw-normal" style="color: black">
                 Manual Image Stitcher
               </h4>
             </div>
             <div class="card-body">
-              <p class="card-text">
+              <p class="card-text" style="color: black;">
                 Manually stitch images to create one continuous image by
                 dragging and dropping images to align the images to be stitched
               </p>

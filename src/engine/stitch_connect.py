@@ -8,6 +8,20 @@ import time
 import numpy as np
 import custom_stitch as cust
 
+def crop_image_to_height(image, desired_height):
+    # Load the input image
+
+    # Get the dimensions of the image (height and width)
+    height, width, _ = image.shape
+
+    # Calculate the number of pixels to crop from each side
+    crop_amount = (height - desired_height) // 2
+
+    # Crop the image equally from both sides
+    cropped_image = image[crop_amount:height-crop_amount, :]
+
+    # Save the cropped image
+    return cropped_image
 
 def delete_images(folder_path):
     image_extensions = [
@@ -196,6 +210,7 @@ def getStitchResult(filenames):
 
             width = image2.shape[1] + image1.shape[1]
             height = max(image2.shape[0], image1.shape[0])
+            min_height = min(image2.shape[0], image1.shape[0])
 
             result = cv2.warpPerspective(image2, H, (width - 100, height))
             # Calculate the four corners of image2 in the resulting image
@@ -278,6 +293,7 @@ def getStitchResult(filenames):
                 # print("length of previous run bucket", len(previousRunBucket))
 
             result = cust.removeBlackBg(result)
+            
 
             # print("length of image bucket", len(imageBucket))
             # print("length of result image bucket", len(resultImageBucket))
@@ -297,6 +313,8 @@ def getStitchResult(filenames):
     os.makedirs(final_history_directory, exist_ok=True)
     copy_files(final_directory, final_history_directory)
 
+    desired_height = int(min_height*0.9)
+    imageBucket[0] = crop_image_to_height(imageBucket[0], desired_height)
     delete_images(save_folder)
     # Save all images together
     buckets = [resultImageBucket, imageBucket]

@@ -8,8 +8,9 @@ let options_exe = {
 let options_py = {
   mode: "text",
   pythonOptions: ["-u"], // get print results in real-time
+  pythonPath: "python/python.exe",
+  // pythonPath: "./resources/app/python/python.exe",
 };
-
 // possible type of messages passed by python code to javascript
 // tn = total number of images sent to python
 // cd = current number of images currently processed
@@ -21,13 +22,14 @@ let options_py = {
 let { PythonShell } = require("python-shell");
 
 // Use when testing with python
-// let pyshell = new PythonShell("./src/engine/upload_multiple.py", options_py); // for when py is converted to exe
+let pyshell = new PythonShell("./src/engine/upload_multiple.py", options_py); // for when py is converted to exe
+// let pyshell = new PythonShell("./resources/app/src/engine/upload_multiple.py", options_py); // for when py is converted to exe
 
 // Use with pyinstaller created exe
 // let pyshell = new PythonShell("./src/upload_multiple.exe", options_exe);  // for when py is converted to exe
 
 // use when building app with exe
-let pyshell = new PythonShell("./resources/app/src/upload_multiple.exe", options_exe);  // for when py is converted to exe
+// let pyshell = new PythonShell("./resources/app/src/upload_multiple.exe", options_exe);  // for when py is converted to exe
 
 
 fileNames = [];
