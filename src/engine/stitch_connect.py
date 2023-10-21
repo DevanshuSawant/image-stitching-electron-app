@@ -4,24 +4,61 @@ import glob
 import sys
 import shutil
 import time
+import imutils
 # import matplotlib.pyplot as plt
 import numpy as np
-import custom_stitch as cust
+# import custom_stitch as cust
 
-def crop_image_to_height(image, desired_height):
-    # Load the input image
 
-    # Get the dimensions of the image (height and width)
-    height, width, _ = image.shape
-
-    # Calculate the number of pixels to crop from each side
-    crop_amount = (height - desired_height) // 2
-
-    # Crop the image equally from both sides
-    cropped_image = image[crop_amount:height-crop_amount, :]
-
-    # Save the cropped image
-    return cropped_image
+def remove_background(stitched):
+    print("[INFO] cropping...")
+    stitched = cv2.copyMakeBorder(stitched, 10, 10, 10, 10, cv2.BORDER_CONSTANT, (0, 0, 0))
+    # convert the stitched image to grayscale and threshold it
+    # such that all pixels greater than zero are set to 255
+    # (foreground) while all others remain 0 (background)
+    gray = cv2.cvtColor(stitched, cv2.COLOR_BGR2GRAY)
+    thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]
+    
+    # find all external contours in the threshold image then find
+    # the *largest* contour which will be the contour/outline of
+    # the stitched image
+    cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE)
+    cnts = imutils.grab_contours(cnts)
+    c = max(cnts, key=cv2.contourArea)
+    # allocate memory for the mask which will contain the
+    # rectangular bounding box of the stitched image region
+    mask = np.zeros(thresh.shape, dtype="uint8")
+    (x, y, w, h) = cv2.boundingRect(c)
+    cv2.rectangle(mask, (x, y), (x + w, y + h), 255, -1)
+    
+    # create two copies of the mask: one to serve as our actual
+    # minimum rectangular region and another to serve as a counter
+    # for how many pixels need to be removed to form the minimum
+    # rectangular region
+    minRect = mask.copy()
+    sub = mask.copy()
+    # keep looping until there are no non-zero pixels left in the
+    # subtracted image
+    while cv2.countNonZero(sub) > 0:
+        # erode the minimum rectangular mask and then subtract
+        # the thresholded image from the minimum rectangular mask
+        # so we can count if there are any non-zero pixels left
+        minRect = cv2.erode(minRect, None)
+        sub = cv2.subtract(minRect, thresh)
+        
+    # find contours in the minimum rectangular mask and then
+    # extract the bounding box (x, y)-coordinates
+    cnts = cv2.findContours(minRect.copy(), cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE)
+    cnts = imutils.grab_contours(cnts)
+    c = max(cnts, key=cv2.contourArea)
+    (x, y, w, h) = cv2.boundingRect(c)
+    # use the bounding box coordinates to extract the our final
+    # stitched image
+    stitched = stitched[y:y + h, x:x + w]
+    
+    return stitched
 
 def delete_images(folder_path):
     image_extensions = [
@@ -40,7 +77,6 @@ def delete_images(folder_path):
     for image_file in image_files:
         os.remove(image_file)
         # print(f"Deleted {image_file}")
-
 
 def copy_files(source_folder, destination_folder):
     # Get the list of files in the source folder
@@ -82,6 +118,7 @@ save_folder = "result-images"
 def getStitchResult(filenames):
     save_folder2 = "image1.png"
     save_folder1 = "result-images\image1.png"
+    stitchy = cv2.Stitcher.create()  # Use createStitcher instead of cv2.Stitcher.create()
 
     directory = os.path.dirname(os.path.abspath(save_folder1))
     final_directory1 = os.path.join(directory, save_folder2)
@@ -99,16 +136,12 @@ def getStitchResult(filenames):
     )  # final directory where the result image will be stored
     sys.stdout.flush()
     error_message = 0
-    # PATH = 'assets/SMT-scratch/original/'
 
-    feature_extractor = "sift"
+
 
     imageBucket = []
     resultImageBucket = []
-    previousRunBucket = []
-    altImageBucket = []
-    gamma = 13
-    alpha = 0.5
+
     number_of_images = len(filenames)
     current_number_of_completed_images = 0
     print(f"tn:{number_of_images}")  # total no of images sent to js file
@@ -116,20 +149,16 @@ def getStitchResult(filenames):
 
     for file in filenames:
         imageBucket.append(cv2.imread(file))
-        # print(file)
+        print(file)
         sys.stdout.flush()
-
-    while True:
+    print(len(imageBucket))
+    for i in range(number_of_images):
+        print(i)
         if len(imageBucket) < 2:
             current_number_of_completed_images += 1
             image = imageBucket.pop(0)
-            image = cv2.addWeighted(
-                        image,
-                        0.5,
-                        image,
-                        0.5,
-                        gamma,
-                    )
+            image = remove_background(image)
+
             imageBucket.insert(0, image)
             print(
                 f"cd:{current_number_of_completed_images}"
@@ -138,183 +167,44 @@ def getStitchResult(filenames):
 
             break
         else:
+            print("More than 2 images")
             image1 = imageBucket.pop(0)
-            image1_gray = cv2.cvtColor(image1, cv2.COLOR_RGB2GRAY)
-
             image2 = imageBucket.pop(0)
-            image2_gray = cv2.cvtColor(image2, cv2.COLOR_RGB2GRAY)
+            
 
-            # fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, constrained_layout=False, figsize=(16,9))
-            # ax1.imshow(image1, cmap="gray")
-            # ax1.set_xlabel("Query image", fontsize=14)
-
-            # ax2.imshow(image2, cmap="gray")
-            # ax2.set_xlabel("Train image (Image to be transformed)", fontsize=14)
-
-            # plt.show()
-
-            widthSize = min(image1.shape[1], image2.shape[1])
-            kpsA, featuresA = cust.detectAndDescribe(
-                image2_gray, "left", widthSize, method=feature_extractor
-            )
-            kpsB, featuresB = cust.detectAndDescribe(
-                image1_gray, "right", widthSize, method=feature_extractor
-            )
-
-            # fig, (ax1,ax2) = plt.subplots(nrows=1, ncols=2, figsize=(20,8), constrained_layout=False)
-            # ax1.imshow(cv2.drawKeypoints(image2_gray,kpsA,None,color=(0,255,0)))
-            # ax1.set_xlabel("(a)", fontsize=14)
-
-            # ax2.imshow(cv2.drawKeypoints(image1_gray,kpsB,None,color=(0,255,0)))
-            # ax2.set_xlabel("(b)", fontsize=14)
-
-            # plt.show()
-
-            # fig = plt.figure(figsize=(20,8))
-
-            matches = cust.matchKeyPointsKNN(
-                featuresA, featuresB, ratio=0.73, method=feature_extractor
-            )
-
-            # img3 = cv2.drawMatches(image2,kpsA,image1,kpsB,matches,
-            #                None,flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
-
-            # plt.imshow(img3)
-            # plt.show()
+            status, output = stitchy.stitch([image1, image2])
             current_number_of_completed_images += 1
-            M = cust.getHomography(
-                kpsA, kpsB, featuresA, featuresB, matches, reprojThresh=4
-            )
-            if M is None:
-                # print("Error!")
+            print(f"Stitching...{status}")
+            if status != 0:
+                print(f"Error:{status}")
                 # print('Storing in Buffer')
                 error_message = 1
-                if len(previousRunBucket) > 0:
-                    if len(altImageBucket) > 0:
-                        image1 = altImageBucket.pop(0)
-                        print(
-                            "Couldnt stitch the images so cleared the buffer and did blending for previous stitched image"
-                        )
-
+                print("Couldnt stitch the images so cleared the buffer")
+                image1 = remove_background(image1)
                 resultImageBucket.append(image1)
                 imageBucket.insert(0, image2)
-                previousRunBucket = []
-                altImageBucket = []
-                print(
-                    f"cd:{current_number_of_completed_images}"
-                )  # current number of images currently processed if error occurs
+                print(f"cd:{current_number_of_completed_images}")  # current number of images currently processed if error occurs
                 sys.stdout.flush()
                 continue
 
-            (matches, H, status) = M
+            result = output
 
-            width = image2.shape[1] + image1.shape[1]
-            height = max(image2.shape[0], image1.shape[0])
-            min_height = min(image2.shape[0], image1.shape[0])
-
-            result = cv2.warpPerspective(image2, H, (width - 100, height))
-            # Calculate the four corners of image2 in the resulting image
-            corners = np.array(
-                [
-                    [0, 0, 1],
-                    [0, image2.shape[0], 1],
-                    [image2.shape[1], image2.shape[0], 1],
-                    [image2.shape[1], 0, 1],
-                ]
-            )
-            transformed_corners = np.dot(H, corners.T)
-            transformed_corners /= transformed_corners[
-                2
-            ]  # Homogeneous coordinates normalization
-
-            # Extract the x and y coordinates of the transformed corners
-            x_coords = transformed_corners[0]
-            y_coords = transformed_corners[1]
-
-            # Determine the minimum and maximum x and y coordinates to get the bounding box of image2
-            min_x = np.min(x_coords)
-            min_y = np.min(y_coords)
-
-            overlap_start = (int(min_y), int(min_x), 3)
-
-            # Insert the croppped image to the result image to get rid of the black background
-            cropped_image = image1[:, : overlap_start[1] + 16, :]
-            result[
-                0 : image1.shape[0], 0 : overlap_start[1] + 16
-            ] = cropped_image  # left image1 is below image2
-            # plt.figure(figsize=(20,10))
-            # plt.imshow(result)
-            # plt.show()
-
-            # Perform alpha blending
-            # alpha = 0.5  # Adjust the alpha value as desired
-            # gamma = 13  # Adjust the gamma value as desired
-            blended_region = cv2.addWeighted(
-                result[0 : image1.shape[0], 0 : image1.shape[1]],
-                alpha,
-                image1,
-                1 - alpha,
-                gamma,
-            )
-            # result = cv2.addWeighted(result, 1, result, 0, gamma)
-            # Replace the blended region in the result
-            result[
-                0 : blended_region.shape[0], 0 : blended_region.shape[1]
-            ] = blended_region
-            # previousResultBucket.insert(0, result)
-            if len(previousRunBucket) > 0:
-                image = previousRunBucket.pop(0)
-                if len(imageBucket) == 0:
-                    image = cv2.addWeighted(
-                        result[0 : image.shape[0], 0 : image.shape[1]],
-                        alpha,
-                        image,
-                        1 - alpha,
-                        gamma,
-                    )
-                else:
-                    alt_image = cv2.addWeighted(
-                        result[0 : image.shape[0], 0 : image.shape[1]],
-                        alpha,
-                        image,
-                        1 - alpha,
-                        gamma,
-                    )
-                    alt_result = result
-                    alt_result[0 : image.shape[0], 0 : image.shape[1]] = alt_image
-                    alt_result = cust.removeBlackBg(alt_result)
-                    altImageBucket.insert(0, alt_result)
-                print(result.shape)
-                # plt.figure(figsize=(20,10))
-                # plt.imshow(result)
-                # plt.show()
-
-                result[0 : image.shape[0], 0 : image.shape[1]] = image
-                # print("length of previous run bucket", len(previousRunBucket))
-
-            result = cust.removeBlackBg(result)
-            
-
-            # print("length of image bucket", len(imageBucket))
-            # print("length of result image bucket", len(resultImageBucket))
+            print("length of image bucket", len(imageBucket))
+            print("length of result image bucket", len(resultImageBucket))
             print(
                 f"cd:{current_number_of_completed_images}"
             )  # current number of images currently processed if no error occurs and merged successfully
             sys.stdout.flush()
-            previousRunBucket.insert(0, result)
             imageBucket.insert(0, result)
 
     # Create the directory
-    os.makedirs(final_directory, exist_ok=True)
 
     history_folder = "result-images-history"
     history_directory = os.path.dirname(os.path.abspath(history_folder))
     final_history_directory = os.path.join(history_directory, history_folder)
-    os.makedirs(final_history_directory, exist_ok=True)
-    copy_files(final_directory, final_history_directory)
 
-    desired_height = int(min_height*0.9)
-    imageBucket[0] = crop_image_to_height(imageBucket[0], desired_height)
+    # desired_height = int(min_height*0.9)
+    # imageBucket[0] = crop_image_to_height(imageBucket[0], desired_height)
     delete_images(save_folder)
     # Save all images together
     buckets = [resultImageBucket, imageBucket]
@@ -326,14 +216,19 @@ def getStitchResult(filenames):
         for index, image in enumerate(buckets[i]):
             if i == 0:
                 filename = os.path.join(save_folder, f"image{index}.png")
-                # image = cv2.addWeighted(image, 0.5, image, 0.5, 15)
                 cv2.imwrite(filename, image)
                 final_index = index
             elif i == 1:
                 final_index += index + 1
                 filename = os.path.join(save_folder, f"image{final_index}.png")
-                # image = cv2.addWeighted(image, 0.5, image, 0.5, 15)
                 cv2.imwrite(filename, image)
-
+                
+    os.makedirs(final_history_directory, exist_ok=True)
+    if os.path.exists(final_directory):
+        print("Copying files to history folder")
+        copy_files(final_directory, final_history_directory)
+    else:
+        os.makedirs(final_directory, exist_ok=True)
+        
     print(f"er:{error_message}")  # error message to see if manual stitching is required
     sys.stdout.flush()
